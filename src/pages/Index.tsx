@@ -1,35 +1,14 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import {
-  Code2,
-  Database,
-  ExternalLink,
-  Github,
-  Mail,
-  Menu,
-  PartyPopper,
-  Palette,
-  Server,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Code2, Database, Mail, PartyPopper, Palette, Server } from "lucide-react";
 
+import SiteHeader from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-type Project = {
-  title: string;
-  description: string;
-  fullDescription: string;
-  tech: string[];
-  features: string[];
-  demoUrl: string;
-  githubUrl: string;
-};
 
 type Skill = {
   name: string;
@@ -38,9 +17,17 @@ type Skill = {
   color: string;
 };
 
+type ProjectCard = {
+  title: string;
+  description: string;
+  tech: string[];
+  routePath: string;
+};
+
 declare global {
   interface Window {
     database?: unknown;
+    __questLogged?: boolean;
   }
 }
 
@@ -48,17 +35,13 @@ const SITE_URL = "https://yourdomain.com";
 const OG_IMAGE_URL = "https://yourdomain.com/og.png";
 
 const Index = () => {
-  const navId = useId();
-  const mobileMenuId = `${navId}-mobile-menu`;
   const mainRef = useRef<HTMLElement | null>(null);
 
   const reducedMotionQuery = useMemo(() => window.matchMedia("(prefers-reduced-motion: reduce)"), []);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(reducedMotionQuery.matches);
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
-  const [navOpen, setNavOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<"home" | "skills" | "projects" | "contact">("home");
   const [lastSubmit, setLastSubmit] = useState(0);
   const [honeypot, setHoneypot] = useState("");
@@ -66,6 +49,9 @@ const Index = () => {
 
   const [questUnlocked, setQuestUnlocked] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const jsonLdPerson = useMemo(
     () => ({
@@ -85,7 +71,7 @@ const Index = () => {
     return () => reducedMotionQuery.removeEventListener("change", onChange);
   }, [reducedMotionQuery]);
 
-  const runCelebration = () => {
+  const runCelebration = useCallback(() => {
     if (questUnlocked) return;
 
     setQuestUnlocked(true);
@@ -96,7 +82,7 @@ const Index = () => {
     setSrStatus(msg);
 
     window.setTimeout(() => setCelebrate(false), prefersReducedMotion ? 0 : 1800);
-  };
+  }, [prefersReducedMotion, questUnlocked]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,13 +100,16 @@ const Index = () => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    console.log("%cSECRET QUEST DISCOVERED", "color: #9b87f5; font-size: 18px; font-weight: bold;");
-console.log("%cYou found a hidden riddle.", "color: #f97316; font-size: 14px;");
-console.log("%cSolve this.", "color: #9b87f5; font-size: 13px; font-weight: bold;");
-console.log("%cI guard data, I store without forgetting.", "color: #ffffff; font-size: 13px;");
-console.log("%cOrganized in rows and columns, what am I.", "color: #ffffff; font-size: 13px;");
-console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-size: 12px;");
+    if (!window.__questLogged) {
+      window.__questLogged = true;
 
+      console.log("%cSECRET QUEST DISCOVERED", "color: #9b87f5; font-size: 18px; font-weight: bold;");
+      console.log("%cYou found a hidden riddle.", "color: #f97316; font-size: 14px;");
+      console.log("%cSolve this.", "color: #9b87f5; font-size: 13px; font-weight: bold;");
+      console.log("%cI guard data, I store without forgetting.", "color: #ffffff; font-size: 13px;");
+      console.log("%cOrganized in rows and columns, what am I.", "color: #ffffff; font-size: 13px;");
+      console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-size: 12px;");
+    }
 
     Object.defineProperty(window, "database", {
       configurable: true,
@@ -133,6 +122,7 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+
       try {
         delete (window as unknown as Record<string, unknown>).database;
       } catch {
@@ -143,7 +133,18 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
         });
       }
     };
-  }, [prefersReducedMotion, questUnlocked]);
+  }, [runCelebration]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const section = params.get("section") as "home" | "skills" | "projects" | "contact" | null;
+    if (!section) return;
+
+    window.setTimeout(() => {
+      document.getElementById(section)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+      navigate("/", { replace: true });
+    }, 0);
+  }, [location.search, navigate, prefersReducedMotion]);
 
   const skills: Skill[] = useMemo(
     () => [
@@ -167,37 +168,25 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
     small: "w-20 h-20 text-xs",
   };
 
-  const projects: Project[] = useMemo(
+  const projects: ProjectCard[] = useMemo(
     () => [
       {
-        title: "E Commerce Platform",
-        description: "A full stack marketplace with payments and real time inventory.",
-        fullDescription:
-          "Built an e commerce solution with authentication, product management, shopping cart, and Stripe payments. Added real time inventory tracking, order management, and an admin dashboard for analytics.",
-        tech: ["React", "Node.js", "PostgreSQL", "Stripe", "Redis"],
-        features: ["Payments", "Real time Inventory", "Admin Dashboard", "Email Notifications"],
-        demoUrl: "#",
-        githubUrl: "#",
+        title: "Alizé",
+        description: "Coastal planning app with tide and weather data in a clear interface.",
+        tech: ["React", "TypeScript", "API"],
+        routePath: "/projects/alize",
       },
       {
-        title: "Task Management App",
-        description: "Team project tool with real time updates and workflows.",
-        fullDescription:
-          "Developed a project management app with collaboration features. Users create projects, assign tasks, set deadlines, and track progress with Kanban boards. Added live updates with WebSockets.",
-        tech: ["TypeScript", "WebSockets", "MongoDB", "Express", "Socket.io"],
-        features: ["Real time Collaboration", "Kanban Boards", "Team Management", "File Attachments"],
-        demoUrl: "#",
-        githubUrl: "#",
+        title: "ClimatServ 17",
+        description: "Production website for a heating and climate services company.",
+        tech: ["TypeScript", "Tailwind", "SEO"],
+        routePath: "/projects/climatserv17",
       },
       {
-        title: "Portfolio CMS",
-        description: "CMS for creators with templates and media management.",
-        fullDescription:
-          "Created a CMS for creators with a drag and drop builder, media library, and templates. Added SEO settings, responsive images, and static generation for performance.",
-        tech: ["React", "Tailwind", "Supabase", "Next.js", "S3"],
-        features: ["Drag and Drop Builder", "Media Library", "SEO Settings", "Template System"],
-        demoUrl: "#",
-        githubUrl: "#",
+        title: "Bandai Namco Internal API",
+        description: "Internal API project developed during an internship, details are confidential.",
+        tech: ["Node.js", "TypeScript", "REST"],
+        routePath: "/projects/bandai-namco",
       },
     ],
     [],
@@ -205,7 +194,6 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
 
   const scrollToSection = (id: "home" | "skills" | "projects" | "contact") => {
     document.getElementById(id)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-    setNavOpen(false);
   };
 
   const onSkipToContent = () => {
@@ -240,28 +228,19 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
         <html lang="en" />
         <title>Tanguy Osvald, Web Developer, Portfolio</title>
 
-        <meta
-          name="description"
-          content="Portfolio of Tanguy Osvald, full stack web developer, projects, skills, and contact."
-        />
+        <meta name="description" content="Portfolio of Tanguy Osvald, full stack web developer, projects, skills, and contact." />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href={`${SITE_URL}/`} />
 
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta
-          property="og:description"
-          content="Projects, skills, and contact, portfolio of a full stack web developer."
-        />
+        <meta property="og:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
         <meta property="og:url" content={`${SITE_URL}/`} />
         <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta
-          name="twitter:description"
-          content="Projects, skills, and contact, portfolio of a full stack web developer."
-        />
+        <meta name="twitter:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
         <meta name="twitter:image" content={OG_IMAGE_URL} />
 
         <script type="application/ld+json">{JSON.stringify(jsonLdPerson)}</script>
@@ -295,84 +274,7 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
         {srStatus}
       </div>
 
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <nav aria-label="Primary navigation">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
-              <button
-                type="button"
-                onClick={() => scrollToSection("home")}
-                className="text-xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent"
-                aria-label="Go to home section"
-              >
-                Tanguy Osvald
-              </button>
-
-              <ul className="hidden md:flex items-center gap-8">
-                {[
-                  { id: "home" as const, label: "Home" },
-                  { id: "skills" as const, label: "Skills" },
-                  { id: "projects" as const, label: "Projects" },
-                  { id: "contact" as const, label: "Contact" },
-                ].map((item) => (
-                  <li key={item.id}>
-                    <button
-                      type="button"
-                      onClick={() => scrollToSection(item.id)}
-                      className={`text-sm font-medium transition-colors relative group ${
-                        activeSection === item.id ? "text-accent" : "text-muted-foreground hover:text-foreground"
-                      }`}
-                      aria-current={activeSection === item.id ? "page" : undefined}
-                    >
-                      {item.label}
-                      <span
-                        aria-hidden="true"
-                        className={`absolute -bottom-1 left-0 w-full h-0.5 bg-accent transition-transform ${
-                          activeSection === item.id ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                        }`}
-                      />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                type="button"
-                onClick={() => setNavOpen((v) => !v)}
-                className="md:hidden p-2 text-foreground"
-                aria-label={navOpen ? "Close menu" : "Open menu"}
-                aria-expanded={navOpen}
-                aria-controls={mobileMenuId}
-              >
-                {navOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <Menu className="w-6 h-6" aria-hidden="true" />}
-              </button>
-            </div>
-          </div>
-
-          <div id={mobileMenuId} className={navOpen ? "md:hidden border-t border-border bg-background/95 backdrop-blur-md" : "hidden"}>
-            <div className="container mx-auto px-4 py-4 space-y-2">
-              {[
-                { id: "home" as const, label: "Home" },
-                { id: "skills" as const, label: "Skills" },
-                { id: "projects" as const, label: "Projects" },
-                { id: "contact" as const, label: "Contact" },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className={`block w-full text-left px-4 py-2 rounded-md transition-colors ${
-                    activeSection === item.id ? "bg-accent/10 text-accent font-medium" : "text-muted-foreground hover:bg-muted"
-                  }`}
-                  aria-current={activeSection === item.id ? "page" : undefined}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </nav>
-      </header>
+      <SiteHeader activeSection={activeSection} onHomeScroll={scrollToSection} />
 
       <main
         id="main"
@@ -386,21 +288,15 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
           <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-20 left-10 w-96 h-96 bg-primary/40 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(scrollY * 0.08)}px, ${parallaxValue(scrollY * 0.12)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(scrollY * 0.08)}px, ${parallaxValue(scrollY * 0.12)}px)` }}
             />
             <div
               className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/40 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(-scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.1)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(-scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.1)}px)` }}
             />
             <div
               className="absolute top-1/2 left-1/3 w-64 h-64 bg-accent/30 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.08)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.08)}px)` }}
             />
           </div>
 
@@ -461,15 +357,11 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-10 right-20 w-72 h-72 bg-secondary/50 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(scrollY * 0.1)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(scrollY * 0.1)}px)` }}
             />
             <div
               className="absolute bottom-20 left-20 w-80 h-80 bg-primary/50 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.09)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.09)}px)` }}
             />
           </div>
 
@@ -524,15 +416,11 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-20 left-10 w-96 h-96 bg-primary/50 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.09)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.09)}px)` }}
             />
             <div
               className="absolute bottom-10 right-10 w-72 h-72 bg-secondary/50 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(-scrollY * 0.08)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(-scrollY * 0.08)}px)` }}
             />
           </div>
 
@@ -544,41 +432,33 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list">
-              {projects.map((project, index) => (
+              {projects.map((project) => (
                 <article key={project.title} role="listitem">
                   <Card className="relative overflow-hidden bg-card border-border hover:border-accent transition-all duration-300">
                     <div className="h-1 bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
 
                     <div className="p-6">
                       <div className="mb-4 relative inline-block" aria-hidden="true">
-                        <div className="w-16 h-16 bg-accent/10 rounded-lg flex items-center justify-center relative hover:bg-accent/20 transition-colors">
-                          <Code2 className="w-8 h-8 text-accent relative z-10" aria-hidden="true" />
+                        <div className="w-16 h-16 bg-accent/10 rounded-lg flex items-center justify-center">
+                          <Code2 className="w-8 h-8 text-accent" aria-hidden="true" />
                         </div>
                       </div>
 
                       <h3 className="text-xl font-bold mb-3">{project.title}</h3>
                       <p className="text-muted-foreground text-sm mb-6 leading-relaxed">{project.description}</p>
 
-                      <ul className="flex flex-wrap gap-2 mb-4" aria-label={`Technologies used in ${project.title}`}>
-                        {project.tech.slice(0, 3).map((tech) => (
-                          <li key={tech} className="px-3 py-1 bg-muted text-xs rounded border border-border">
-                            {tech}
+                      <ul className="flex flex-wrap gap-2 mb-4" aria-label={`Tech tags for ${project.title}`}>
+                        {project.tech.map((t) => (
+                          <li key={t} className="px-3 py-1 bg-muted text-xs rounded border border-border">
+                            {t}
                           </li>
                         ))}
-                        {project.tech.length > 3 ? (
-                          <li className="px-3 py-1 bg-muted text-xs rounded border border-border">+{project.tech.length - 3}</li>
-                        ) : null}
                       </ul>
 
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-accent/50 text-accent hover:bg-accent/10"
-                        onClick={() => setSelectedProject(index)}
-                        aria-label={`Open details for ${project.title}`}
-                      >
-                        View Details
+                      <Button asChild variant="outline" size="sm" className="w-full border-accent/50 text-accent hover:bg-accent/10">
+                        <Link to={project.routePath} aria-label={`Open project page for ${project.title}`}>
+                          View project page
+                        </Link>
                       </Button>
                     </div>
 
@@ -590,90 +470,11 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
           </div>
         </section>
 
-        <Dialog
-          open={selectedProject !== null}
-          onOpenChange={(open) => {
-            if (!open) setSelectedProject(null);
-          }}
-        >
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card border-accent" aria-describedby={undefined}>
-            {selectedProject !== null ? (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="text-3xl font-bold mb-2">{projects[selectedProject].title}</DialogTitle>
-                  <p className="text-muted-foreground">{projects[selectedProject].description}</p>
-                </DialogHeader>
-
-                <div className="space-y-6 mt-6">
-                  <section aria-label="Overview">
-                    <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-accent" aria-hidden="true" />
-                      Overview
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">{projects[selectedProject].fullDescription}</p>
-                  </section>
-
-                  <section aria-label="Key features">
-                    <h3 className="text-lg font-semibold mb-3">Key Features</h3>
-                    <ul className="grid grid-cols-2 gap-3">
-                      {projects[selectedProject].features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-2 text-sm">
-                          <div className="w-1.5 h-1.5 bg-accent rounded-full" aria-hidden="true" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  <section aria-label="Tech stack">
-                    <h3 className="text-lg font-semibold mb-3">Tech Stack</h3>
-                    <ul className="flex flex-wrap gap-2">
-                      {projects[selectedProject].tech.map((tech) => (
-                        <li key={tech} className="px-4 py-2 bg-accent/10 text-sm rounded-lg border border-accent/30 font-medium">
-                          {tech}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  <div className="flex gap-4 pt-4">
-                    <Button asChild className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90">
-                      <a
-                        href={projects[selectedProject].demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Open live demo in a new tab for ${projects[selectedProject].title}`}
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
-                        Live Demo
-                      </a>
-                    </Button>
-
-                    <Button asChild variant="outline" className="flex-1 border-accent text-accent hover:bg-accent/10">
-                      <a
-                        href={projects[selectedProject].githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Open source code in a new tab for ${projects[selectedProject].title}`}
-                      >
-                        <Github className="w-4 h-4 mr-2" aria-hidden="true" />
-                        View Code
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ) : null}
-          </DialogContent>
-        </Dialog>
-
         <section id="contact" aria-label="Contact" className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-10 left-1/4 w-80 h-80 bg-accent/50 rounded-full blur-3xl"
-              style={{
-                transform: `translate(${parallaxValue(scrollY * 0.04)}px, ${parallaxValue(scrollY * 0.07)}px)`,
-              }}
+              style={{ transform: `translate(${parallaxValue(scrollY * 0.04)}px, ${parallaxValue(scrollY * 0.07)}px)` }}
             />
           </div>
 
@@ -789,7 +590,7 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-lg font-semibold">Secret Quest</h3>
-                        <p className="text-sm text-muted-foreground"></p>
+                        <p className="text-sm text-muted-foreground">Open DevTools and read the riddle in the Console.</p>
                       </div>
                     </div>
 
@@ -807,7 +608,7 @@ console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-si
                               <Database className="w-4 h-4 text-accent" aria-hidden="true" />
                             </div>
                             <div className="min-w-0">
-                              <p className="font-semibold">Well done!</p>
+                              <p className="font-semibold">Well done.</p>
                               <p className="text-sm text-muted-foreground">You found the answer.</p>
                             </div>
                           </div>

@@ -1,0 +1,133 @@
+import { Helmet } from "react-helmet-async";
+import { ExternalLink, Github } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import SiteHeader from "@/components/SiteHeader";
+
+const SITE_URL = "https://yourdomain.com";
+const OG_IMAGE_URL = "https://yourdomain.com/og.png";
+
+export default function ProjectAlize() {
+  const title = "Alizé, Project, Tanguy Osvald";
+  const description =
+    "Alizé is a web application focused on coastal conditions and outdoor planning. It aggregates tide and weather data into a clear interface.";
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <html lang="en" />
+        <title>{title}</title>
+
+        <meta name="description" content={description} />
+        <meta name="robots" content="index,follow" />
+        <link rel="canonical" href={`${SITE_URL}/projects/alize`} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Alizé, Project" />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={`${SITE_URL}/projects/alize`} />
+        <meta property="og:image" content={OG_IMAGE_URL} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Alizé, Project" />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={OG_IMAGE_URL} />
+      </Helmet>
+
+      <SiteHeader activeSection="projects" onHomeScroll={() => {}} />
+
+      <main className="pt-16">
+        <header className="border-b border-border">
+          <div className="container mx-auto px-4 py-10">
+            <h1 className="text-4xl md:text-5xl font-bold">Alizé</h1>
+            <p className="mt-3 text-muted-foreground max-w-2xl">
+              Web application focused on coastal conditions and outdoor planning.
+            </p>
+          </div>
+        </header>
+
+        <section aria-label="Project content" className="container mx-auto px-4 py-10">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] items-start">
+            <article className="space-y-6">
+              <Card className="p-6 bg-card border-border">
+                <h2 className="text-2xl font-semibold">Overview</h2>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  Alizé helps users plan coastal activities by bringing key conditions into a single interface. The app
+                  aggregates tide data, weather conditions, and location context, then presents it in a way that supports
+                  quick decisions.
+                </p>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  The project focuses on strong typing, clean component structure, and maintainable data fetching. The UI
+                  stays readable on mobile and desktop, with consistent spacing and predictable navigation.
+                </p>
+              </Card>
+
+              <Card className="p-6 bg-card border-border">
+                <h2 className="text-2xl font-semibold">Key features</h2>
+                <ul className="mt-3 space-y-2 text-muted-foreground">
+                  <li>Tide and weather data in one place.</li>
+                  <li>Location based views and clear summaries.</li>
+                  <li>Responsive layout and reusable UI components.</li>
+                  <li>Structured data fetching with predictable states.</li>
+                </ul>
+              </Card>
+
+              <Card className="p-6 bg-card border-border">
+                <h2 className="text-2xl font-semibold">Tech stack</h2>
+                <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tech stack list">
+                  {["React", "TypeScript", "Tailwind", "API integration"].map((t) => (
+                    <li key={t} className="px-3 py-1 rounded border border-border bg-muted text-sm">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </article>
+
+            <aside className="space-y-6 lg:sticky lg:top-24" aria-label="Project links">
+              <Card className="p-6 bg-card border-border">
+                <h2 className="text-xl font-semibold">Links</h2>
+
+                <div className="mt-4 space-y-3">
+                  <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                    <a
+                      href="https://alize.netlify.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Alizé live site in a new tab"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
+                      Live site
+                    </a>
+                  </Button>
+
+                  <Button asChild variant="outline" className="w-full border-accent text-accent hover:bg-accent/10">
+                    <a
+                      href="https://github.com/Tanosv/Tanosv-alize-coast-guide"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open Alizé source code on GitHub in a new tab"
+                    >
+                      <Github className="w-4 h-4 mr-2" aria-hidden="true" />
+                      GitHub
+                    </a>
+                  </Button>
+                </div>
+
+                <p className="mt-4 text-sm text-muted-foreground">
+                  If you prefer, point this button to the exact repository for Alizé, instead of a profile or umbrella repo.
+                </p>
+              </Card>
+            </aside>
+          </div>
+        </section>
+
+        <footer className="py-10 border-t border-border">
+          <div className="container mx-auto px-4 text-center text-muted-foreground">
+            <p>© 2026 Tanguy Osvald. All rights reserved.</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
