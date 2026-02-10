@@ -1,12 +1,25 @@
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { toast } from "sonner";
+import {
+  Code2,
+  Database,
+  ExternalLink,
+  Github,
+  Mail,
+  Menu,
+  PartyPopper,
+  Palette,
+  Server,
+  Sparkles,
+  X,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Code2, Mail, Database, Palette, Server, Sparkles, Menu, X, ExternalLink, Github, PartyPopper } from "lucide-react";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
-import { Helmet } from "react-helmet-async";
 
 type Project = {
   title: string;
@@ -27,7 +40,7 @@ type Skill = {
 
 declare global {
   interface Window {
-    database?: () => string;
+    database?: unknown;
   }
 }
 
@@ -73,6 +86,8 @@ const Index = () => {
   }, [reducedMotionQuery]);
 
   const runCelebration = () => {
+    if (questUnlocked) return;
+
     setQuestUnlocked(true);
     setCelebrate(true);
 
@@ -99,19 +114,35 @@ const Index = () => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    console.log("%cSECRET QUEST", "color: #9b87f5; font-size: 18px; font-weight: bold;");
-    console.log('%cType %cdatabase()%c in the console to unlock a reward.', "color: #f97316;", "color: #ffffff; font-weight: bold;", "color: #f97316;");
+    console.log("%cSECRET QUEST DISCOVERED", "color: #9b87f5; font-size: 18px; font-weight: bold;");
+    console.log("%cYou found a hidden riddle.", "color: #f97316; font-size: 14px;");
+    console.log("%cSolve this.", "color: #9b87f5; font-size: 13px; font-weight: bold;");
+    console.log('%c"I guard data, I store without forgetting.", "color: #ffffff; font-size: 13px;');
+    console.log('%c"Organized in rows and columns, what am I.", "color: #ffffff; font-size: 13px;');
+    console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-size: 12px;");
 
-    window.database = () => {
-      runCelebration();
-      return "Unlocked";
-    };
+    Object.defineProperty(window, "database", {
+      configurable: true,
+      enumerable: false,
+      get: () => {
+        runCelebration();
+        return "Unlocked";
+      },
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      delete window.database;
+      try {
+        delete (window as unknown as Record<string, unknown>).database;
+      } catch {
+        Object.defineProperty(window, "database", {
+          configurable: true,
+          enumerable: false,
+          value: undefined,
+        });
+      }
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, questUnlocked]);
 
   const skills: Skill[] = useMemo(
     () => [
@@ -208,19 +239,28 @@ const Index = () => {
         <html lang="en" />
         <title>Tanguy Osvald, Web Developer, Portfolio</title>
 
-        <meta name="description" content="Portfolio of Tanguy Osvald, full stack web developer, projects, skills, and contact." />
+        <meta
+          name="description"
+          content="Portfolio of Tanguy Osvald, full stack web developer, projects, skills, and contact."
+        />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href={`${SITE_URL}/`} />
 
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta property="og:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
+        <meta
+          property="og:description"
+          content="Projects, skills, and contact, portfolio of a full stack web developer."
+        />
         <meta property="og:url" content={`${SITE_URL}/`} />
         <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta name="twitter:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
+        <meta
+          name="twitter:description"
+          content="Projects, skills, and contact, portfolio of a full stack web developer."
+        />
         <meta name="twitter:image" content={OG_IMAGE_URL} />
 
         <script type="application/ld+json">{JSON.stringify(jsonLdPerson)}</script>
@@ -343,9 +383,24 @@ const Index = () => {
       >
         <section id="home" aria-label="Home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
           <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
-            <div className="absolute top-20 left-10 w-96 h-96 bg-primary/40 rounded-full blur-3xl" style={{ transform: `translate(${parallaxValue(scrollY * 0.08)}px, ${parallaxValue(scrollY * 0.12)}px)` }} />
-            <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/40 rounded-full blur-3xl" style={{ transform: `translate(${parallaxValue(-scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.1)}px)` }} />
-            <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-accent/30 rounded-full blur-3xl" style={{ transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.08)}px)` }} />
+            <div
+              className="absolute top-20 left-10 w-96 h-96 bg-primary/40 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(scrollY * 0.08)}px, ${parallaxValue(scrollY * 0.12)}px)`,
+              }}
+            />
+            <div
+              className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/40 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(-scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.1)}px)`,
+              }}
+            />
+            <div
+              className="absolute top-1/2 left-1/3 w-64 h-64 bg-accent/30 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.08)}px)`,
+              }}
+            />
           </div>
 
           <div
@@ -375,12 +430,26 @@ const Index = () => {
             </p>
 
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group" onClick={() => scrollToSection("projects")} aria-label="Go to projects section">
+              <Button
+                size="lg"
+                className="bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group"
+                onClick={() => scrollToSection("projects")}
+                aria-label="Go to projects section"
+              >
                 <span className="relative z-10">View Projects</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" aria-hidden="true" />
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                  aria-hidden="true"
+                />
               </Button>
 
-              <Button size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10" onClick={() => scrollToSection("contact")} aria-label="Go to contact section">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-accent text-accent hover:bg-accent/10"
+                onClick={() => scrollToSection("contact")}
+                aria-label="Go to contact section"
+              >
                 Get In Touch
               </Button>
             </div>
@@ -388,6 +457,21 @@ const Index = () => {
         </section>
 
         <section id="skills" aria-label="Skills" className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
+            <div
+              className="absolute top-10 right-20 w-72 h-72 bg-secondary/50 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(scrollY * 0.1)}px)`,
+              }}
+            />
+            <div
+              className="absolute bottom-20 left-20 w-80 h-80 bg-primary/50 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(scrollY * 0.06)}px, ${parallaxValue(-scrollY * 0.09)}px)`,
+              }}
+            />
+          </div>
+
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
@@ -436,6 +520,21 @@ const Index = () => {
         </section>
 
         <section id="projects" aria-label="Projects" className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
+            <div
+              className="absolute top-20 left-10 w-96 h-96 bg-primary/50 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(scrollY * 0.05)}px, ${parallaxValue(scrollY * 0.09)}px)`,
+              }}
+            />
+            <div
+              className="absolute bottom-10 right-10 w-72 h-72 bg-secondary/50 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(-scrollY * 0.07)}px, ${parallaxValue(-scrollY * 0.08)}px)`,
+              }}
+            />
+          </div>
+
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
@@ -450,6 +549,12 @@ const Index = () => {
                     <div className="h-1 bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
 
                     <div className="p-6">
+                      <div className="mb-4 relative inline-block" aria-hidden="true">
+                        <div className="w-16 h-16 bg-accent/10 rounded-lg flex items-center justify-center relative hover:bg-accent/20 transition-colors">
+                          <Code2 className="w-8 h-8 text-accent relative z-10" aria-hidden="true" />
+                        </div>
+                      </div>
+
                       <h3 className="text-xl font-bold mb-3">{project.title}</h3>
                       <p className="text-muted-foreground text-sm mb-6 leading-relaxed">{project.description}</p>
 
@@ -459,15 +564,24 @@ const Index = () => {
                             {tech}
                           </li>
                         ))}
-                        {project.tech.length > 3 && (
+                        {project.tech.length > 3 ? (
                           <li className="px-3 py-1 bg-muted text-xs rounded border border-border">+{project.tech.length - 3}</li>
-                        )}
+                        ) : null}
                       </ul>
 
-                      <Button type="button" variant="outline" size="sm" className="w-full border-accent/50 text-accent hover:bg-accent/10" onClick={() => setSelectedProject(index)} aria-label={`Open details for ${project.title}`}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-accent/50 text-accent hover:bg-accent/10"
+                        onClick={() => setSelectedProject(index)}
+                        aria-label={`Open details for ${project.title}`}
+                      >
                         View Details
                       </Button>
                     </div>
+
+                    <div className="h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-0 hover:opacity-100 transition-opacity" aria-hidden="true" />
                   </Card>
                 </article>
               ))}
@@ -475,9 +589,14 @@ const Index = () => {
           </div>
         </section>
 
-        <Dialog open={selectedProject !== null} onOpenChange={(open) => (!open ? setSelectedProject(null) : undefined)}>
+        <Dialog
+          open={selectedProject !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelectedProject(null);
+          }}
+        >
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-card border-accent" aria-describedby={undefined}>
-            {selectedProject !== null && (
+            {selectedProject !== null ? (
               <>
                 <DialogHeader>
                   <DialogTitle className="text-3xl font-bold mb-2">{projects[selectedProject].title}</DialogTitle>
@@ -518,14 +637,24 @@ const Index = () => {
 
                   <div className="flex gap-4 pt-4">
                     <Button asChild className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90">
-                      <a href={projects[selectedProject].demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open live demo in a new tab for ${projects[selectedProject].title}`}>
+                      <a
+                        href={projects[selectedProject].demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open live demo in a new tab for ${projects[selectedProject].title}`}
+                      >
                         <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
                         Live Demo
                       </a>
                     </Button>
 
                     <Button asChild variant="outline" className="flex-1 border-accent text-accent hover:bg-accent/10">
-                      <a href={projects[selectedProject].githubUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open source code in a new tab for ${projects[selectedProject].title}`}>
+                      <a
+                        href={projects[selectedProject].githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open source code in a new tab for ${projects[selectedProject].title}`}
+                      >
                         <Github className="w-4 h-4 mr-2" aria-hidden="true" />
                         View Code
                       </a>
@@ -533,11 +662,20 @@ const Index = () => {
                   </div>
                 </div>
               </>
-            )}
+            ) : null}
           </DialogContent>
         </Dialog>
 
         <section id="contact" aria-label="Contact" className="py-24 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
+            <div
+              className="absolute top-10 left-1/4 w-80 h-80 bg-accent/50 rounded-full blur-3xl"
+              style={{
+                transform: `translate(${parallaxValue(scrollY * 0.04)}px, ${parallaxValue(scrollY * 0.07)}px)`,
+              }}
+            />
+          </div>
+
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
@@ -557,37 +695,84 @@ const Index = () => {
 
                     <div style={{ position: "absolute", left: "-9999px" }} aria-hidden="true">
                       <label htmlFor="website">Do not fill</label>
-                      <input id="website" type="text" name="website" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+                      <input
+                        id="website"
+                        type="text"
+                        name="website"
+                        value={honeypot}
+                        onChange={(e) => setHoneypot(e.target.value)}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
                     </div>
 
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium mb-2">
                         Your name
                       </label>
-                      <Input id="name" name="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-background border-border focus:border-accent" required minLength={2} maxLength={100} autoComplete="name" aria-describedby="contact-hint" />
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="bg-background border-border focus:border-accent"
+                        required
+                        minLength={2}
+                        maxLength={100}
+                        autoComplete="name"
+                        aria-describedby="contact-hint"
+                      />
                     </div>
 
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium mb-2">
                         Email address
                       </label>
-                      <Input id="email" name="email" type="email" inputMode="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-background border-border focus:border-accent" required autoComplete="email" aria-describedby="contact-hint" />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        inputMode="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="bg-background border-border focus:border-accent"
+                        required
+                        autoComplete="email"
+                        aria-describedby="contact-hint"
+                      />
                     </div>
 
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium mb-2">
                         Your message
-                        <span className="text-xs text-muted-foreground ml-2">Hint, there is a hidden quest.</span>
                       </label>
-                      <Textarea id="message" name="message" value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="bg-background border-border focus:border-accent min-h-[150px]" required minLength={10} maxLength={1000} autoComplete="off" aria-describedby="contact-hint" />
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        className="bg-background border-border focus:border-accent min-h-[150px]"
+                        required
+                        minLength={10}
+                        maxLength={1000}
+                        autoComplete="off"
+                        aria-describedby="contact-hint"
+                      />
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group"
+                    >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <Mail className="w-4 h-4" aria-hidden="true" />
                         Send message
                       </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" aria-hidden="true" />
+                      <div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                        aria-hidden="true"
+                      />
                     </Button>
                   </form>
                 </div>
@@ -603,20 +788,26 @@ const Index = () => {
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-lg font-semibold">Secret Reward</h3>
-                        <p className="text-sm text-muted-foreground">Open DevTools, Console, then type database().</p>
+                        <p className="text-sm text-muted-foreground">Open DevTools and the Console, then solve the riddle.</p>
                       </div>
                     </div>
 
                     <div className="mt-5">
                       {questUnlocked ? (
-                        <div className="relative rounded-lg border border-accent/30 bg-accent/5 p-4" style={{ animation: celebrate && !prefersReducedMotion ? "rewardPop 420ms ease-out both" : undefined }} aria-live="polite">
+                        <div
+                          className="relative rounded-lg border border-accent/30 bg-accent/5 p-4"
+                          style={{
+                            animation: celebrate && !prefersReducedMotion ? "rewardPop 420ms ease-out both" : undefined,
+                          }}
+                          aria-live="polite"
+                        >
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center">
                               <Database className="w-4 h-4 text-accent" aria-hidden="true" />
                             </div>
                             <div className="min-w-0">
                               <p className="font-semibold">Unlocked</p>
-                              <p className="text-sm text-muted-foreground">You found the secret trigger.</p>
+                              <p className="text-sm text-muted-foreground">You found the answer.</p>
                             </div>
                           </div>
 
@@ -630,7 +821,12 @@ const Index = () => {
                                   <span
                                     key={i}
                                     className="absolute top-2 text-xs"
-                                    style={{ left, animation: `confettiFall ${duration} ease-in forwards`, animationDelay: delay, opacity: 0 }}
+                                    style={{
+                                      left,
+                                      animation: `confettiFall ${duration} ease-in forwards`,
+                                      animationDelay: delay,
+                                      opacity: 0,
+                                    }}
                                   >
                                     {i % 3 === 0 ? "🎉" : i % 3 === 1 ? "✨" : "🎊"}
                                   </span>
