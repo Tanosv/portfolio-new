@@ -115,11 +115,12 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     console.log("%cSECRET QUEST DISCOVERED", "color: #9b87f5; font-size: 18px; font-weight: bold;");
-    console.log("%cYou found a hidden riddle.", "color: #f97316; font-size: 14px;");
-    console.log("%cSolve this.", "color: #9b87f5; font-size: 13px; font-weight: bold;");
-    console.log('%c"I guard data, I store without forgetting.", "color: #ffffff; font-size: 13px;');
-    console.log('%c"Organized in rows and columns, what am I.", "color: #ffffff; font-size: 13px;');
-    console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-size: 12px;");
+console.log("%cYou found a hidden riddle.", "color: #f97316; font-size: 14px;");
+console.log("%cSolve this.", "color: #9b87f5; font-size: 13px; font-weight: bold;");
+console.log("%cI guard data, I store without forgetting.", "color: #ffffff; font-size: 13px;");
+console.log("%cOrganized in rows and columns, what am I.", "color: #ffffff; font-size: 13px;");
+console.log("%cIf you know the answer, speak it here.", "color: #f97316; font-size: 12px;");
+
 
     Object.defineProperty(window, "database", {
       configurable: true,
@@ -787,8 +788,8 @@ const Index = () => {
                         <PartyPopper className="w-5 h-5 text-accent" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-lg font-semibold">Secret Reward</h3>
-                        <p className="text-sm text-muted-foreground">Open DevTools and the Console, then solve the riddle.</p>
+                        <h3 className="text-lg font-semibold">Secret Quest</h3>
+                        <p className="text-sm text-muted-foreground"></p>
                       </div>
                     </div>
 
@@ -806,7 +807,7 @@ const Index = () => {
                               <Database className="w-4 h-4 text-accent" aria-hidden="true" />
                             </div>
                             <div className="min-w-0">
-                              <p className="font-semibold">Unlocked</p>
+                              <p className="font-semibold">Well done!</p>
                               <p className="text-sm text-muted-foreground">You found the answer.</p>
                             </div>
                           </div>
