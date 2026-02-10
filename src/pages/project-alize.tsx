@@ -114,9 +114,6 @@ export default function ProjectAlize() {
                   </Button>
                 </div>
 
-                <p className="mt-4 text-sm text-muted-foreground">
-                  If you prefer, point this button to the exact repository for Alizé, instead of a profile or umbrella repo.
-                </p>
               </Card>
             </aside>
           </div>
