@@ -149,7 +149,7 @@ export default function ProjectClimatserv17() {
                 <div className="mt-4 space-y-3">
                   <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                     <a
-                      href="https://climatserv17.netlify.app"
+                      href="https://climat-serv17.vercel.app"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Open ClimatServ 17 live site in a new tab"
