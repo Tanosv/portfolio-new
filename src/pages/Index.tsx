@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Boxes, Cloud, Code2, Database, Lock, Mail, PartyPopper, Server, ShieldCheck } from "lucide-react";
-
+import { Boxes, Cloud, Code2, Database, Lock, Mail, PartyPopper, Server, ShieldCheck, Github, Linkedin } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SITE_URL } from "@/lib/config";
+import SiteFooter from "@/components/SiteFooter";
 
 type Skill = {
   name: string;
@@ -781,23 +781,7 @@ const Index = () => {
         </section>
       </main>
 
-      <footer className="py-8 border-t border-border relative">
-        <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
-
-        <div className="container mx-auto px-4 text-center text-muted-foreground space-y-4">
-          <p>© 2026 Tanguy Osvald. All rights reserved.</p>
-
-          <div className="flex justify-center gap-6 text-sm">
-            <Link to="/legal-notice" className="hover:text-foreground transition-colors">
-              Legal Notice
-            </Link>
-
-            <Link to="/privacy-policy" className="hover:text-foreground transition-colors">
-              Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };
