@@ -773,19 +773,7 @@ const Index = () => {
                       )}
                     </div>
 
-                    <div className="mt-5 rounded-lg border border-border bg-muted/20 p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center">
-                          <ShieldCheck className="w-4 h-4 text-accent" aria-hidden="true" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-semibold">Form security</p>
-                          <p className="text-sm text-muted-foreground">
-                            Honeypot field, basic throttling, and server side handling through Netlify Forms.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 </Card>
               </aside>
