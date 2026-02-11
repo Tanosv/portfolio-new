@@ -507,7 +507,6 @@ const Index = () => {
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
               <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Projects</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Recent work that shows product thinking and engineering</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list" aria-label="Project cards">
@@ -599,7 +598,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
               <h2 className="text-4xl md:text-5xl font-bold mb-4">Let us Connect</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Share your project, I will reply with next steps.</p>
+              <p className="text-muted-foreground max-w-2xl mx-auto">I am open to work and hear about your project ideas!</p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_320px] items-start max-w-5xl mx-auto">
