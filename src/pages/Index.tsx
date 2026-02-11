@@ -379,12 +379,12 @@ const Index = () => {
               </h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-muted-foreground mb-4">Web Developer and Creative Technologist</p>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-4">Web Developer and DevOps</p>
 
             <div className="ornate-divider max-w-md mx-auto my-8" aria-hidden="true" />
 
             <p className="text-lg text-muted-foreground mb-12 max-w-xl mx-auto">
-              Turning ideas into reliable digital products through design and engineering.
+              Turning ideas into reliable digital products through creative engineering.
             </p>
 
             <div className="flex gap-4 justify-center flex-wrap">
