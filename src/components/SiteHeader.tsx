@@ -36,13 +36,14 @@ export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
       <nav aria-label="Primary navigation">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <NavLink
-              to="/"
-              className="text-xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent"
-              aria-label="Go to home page"
-            >
-              Tanguy Osvald
-            </NavLink>
+            <button
+  type="button"
+  onClick={() => onHomeScroll("home")}
+  className="text-xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent"
+  aria-label="Back to top"
+>
+  Tanguy Osvald
+</button>
 
             <ul className="hidden md:flex items-center gap-8">
               {[

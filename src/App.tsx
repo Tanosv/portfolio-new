@@ -10,6 +10,7 @@ import ProjectBandaiNamco from "./pages/project-bandai-namco";
 import ProjectClimatserv17 from "./pages/project-climatserv17";
 import LegalNotice from "@/pages/legal-notice";
 import PrivacyPolicy from "@/pages/privacy-policy";
+import ScrollToTop from "@/components/ScrollToTop"
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+      <ScrollToTop />
         <Routes>
     <Route path="/" element={<Index />} />
     <Route path="/projects/alize" element={<ProjectAlize />} />
