@@ -1,0 +1,2 @@
+export const SITE_URL =
+  import.meta.env.VITE_SITE_URL || "https://portfolio-tanguy-osvald.netlify.app";

@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_URL } from "@/lib/config"
 
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/og.png";
+
 
 export default function ProjectBandaiNamco() {
   const title = "Bandai Namco Internal API, Project, Tanguy Osvald";
@@ -24,12 +24,10 @@ export default function ProjectBandaiNamco() {
         <meta property="og:title" content="Bandai Namco Internal API, Project" />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`${SITE_URL}/projects/bandai-namco`} />
-        <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Bandai Namco Internal API, Project" />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={OG_IMAGE_URL} />
       </Helmet>
 
       <SiteHeader activeSection="projects" onHomeScroll={() => {}} />

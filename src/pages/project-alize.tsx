@@ -3,9 +3,7 @@ import { ExternalLink, Github } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
-
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/og.png";
+import { SITE_URL } from "@/lib/config"
 
 export default function ProjectAlize() {
   const title = "Alizé Project";
@@ -26,12 +24,10 @@ export default function ProjectAlize() {
         <meta property="og:title" content="Alizé, Project" />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`${SITE_URL}/projects/alize`} />
-        <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Alizé, Project" />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={OG_IMAGE_URL} />
       </Helmet>
 
       <SiteHeader activeSection="projects" onHomeScroll={() => {}} />

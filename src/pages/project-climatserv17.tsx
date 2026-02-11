@@ -3,9 +3,8 @@ import { ExternalLink, Github } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_URL } from "@/lib/config"
 
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/images/projects/Screen_Climatserv17_Banner.webp";
 
 export default function ProjectClimatserv17() {
   const title = "Project ClimatServ 17";
@@ -26,12 +25,10 @@ export default function ProjectClimatserv17() {
         <meta property="og:title" content="ClimatServ 17, Project" />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`${SITE_URL}/projects/climatserv17`} />
-        <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ClimatServ 17, Project" />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={OG_IMAGE_URL} />
       </Helmet>
 
       <SiteHeader activeSection="projects" onHomeScroll={() => {}} />

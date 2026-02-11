@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { SITE_URL } from "@/lib/config"
 
 type Skill = {
   name: string;
@@ -32,9 +33,6 @@ declare global {
     __questLogged?: boolean;
   }
 }
-
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/og.png";
 
 const encodeForm = (data: Record<string, string>) =>
   Object.keys(data)
@@ -297,12 +295,10 @@ const Index = () => {
         <meta property="og:title" content="Tanguy Osvald, Web Developer, Portfolio" />
         <meta property="og:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
         <meta property="og:url" content={`${SITE_URL}/`} />
-        <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Tanguy Osvald, Web Developer, Portfolio" />
         <meta name="twitter:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
-        <meta name="twitter:image" content={OG_IMAGE_URL} />
 
         <script type="application/ld+json">{JSON.stringify(jsonLdPerson)}</script>
       </Helmet>
