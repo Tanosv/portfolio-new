@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="en">
   <body>
-    <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="website">
+    <form name="contact" method="POST" data-netlify="true" netlify data-netlify-honeypot="website">
       <input type="hidden" name="form-name" value="contact" />
-      <p style="display:none;">
+      <p hidden>
         <label>Do not fill <input name="website" /></label>
       </p>
-      <input name="name" />
-      <input name="email" />
-      <textarea name="message"></textarea>
+      <p><label>Name <input name="name" /></label></p>
+      <p><label>Email <input type="email" name="email" /></label></p>
+      <p><label>Message <textarea name="message"></textarea></label></p>
+      <p><button type="submit">Send</button></p>
     </form>
   </body>
 </html>
