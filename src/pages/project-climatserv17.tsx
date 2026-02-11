@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
 
 const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/og.png";
+const OG_IMAGE_URL = "https://yourdomain.com/images/projects/Screen_Climatserv17_Banner.webp";
 
 export default function ProjectClimatserv17() {
-  const title = "ClimatServ 17, Project, Tanguy Osvald";
+  const title = "Project ClimatServ 17";
   const description =
-    "ClimatServ 17 is a production website for a heating and climate services company, built with accessibility, SEO structure, and clear service presentation.";
+    "ClimatServ 17 is a production website for a heating and climate services company, built with clear service pages, accessibility basics, and SEO focused routing.";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -46,41 +46,102 @@ export default function ProjectClimatserv17() {
           </div>
         </header>
 
+        <section aria-label="Screenshots" className="container mx-auto px-4 pt-14">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold">Screenshots</h2>
+            <p className="mt-2 text-muted-foreground">
+              Desktop and mobile views of the home page layout and content structure.
+            </p>
+          </div>
+
+          <Card className="p-6 md:p-8 bg-card/60 border-border">
+            <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr] items-center">
+              <figure className="space-y-4">
+                <div className="rounded-xl overflow-hidden border border-border bg-card shadow-lg">
+                  <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" aria-hidden="true" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" aria-hidden="true" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" aria-hidden="true" />
+                    <span className="ml-3 text-xs text-muted-foreground">Desktop view</span>
+                  </div>
+
+                  <img
+                    src="/images/projects/Screen_Climatserv17_Big.webp"
+                    alt="ClimatServ 17 desktop interface showing the main layout and service sections"
+                    className="w-full h-auto object-contain lg:h-[420px] lg:object-cover lg:object-top"
+                    loading="lazy"
+                  />
+                </div>
+              </figure>
+
+              <figure className="space-y-4 flex flex-col items-center">
+                <div className="w-full max-w-[320px]">
+                  <div className="rounded-2xl border border-border bg-card/60 shadow-lg p-4">
+                    <img
+                      src="/images/projects/Screen_Climatserv17_Small.webp"
+                      alt="ClimatServ 17 mobile interface showing the responsive layout and service blocks"
+                      className="w-full h-auto object-contain scale-[1.02] rounded-3xl"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <figcaption className="text-sm text-muted-foreground text-center">
+                  Mobile view
+                </figcaption>
+              </figure>
+            </div>
+          </Card>
+        </section>
+
         <section aria-label="Project content" className="container mx-auto px-4 py-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] items-start">
             <article className="space-y-6">
               <Card className="p-6 bg-card border-border">
                 <h2 className="text-2xl font-semibold">Overview</h2>
                 <p className="mt-3 text-muted-foreground leading-relaxed">
-                  ClimatServ 17 is a production site designed to present services clearly and convert visitors into contact
-                  requests. The project focuses on navigation clarity, semantic structure, and an accessible layout for
-                  mobile and desktop users.
+                  ClimatServ 17 is a production site built to present services clearly and convert visits into contact
+                  requests. The work focuses on readable navigation, semantic structure, and a responsive layout for
+                  mobile and desktop.
                 </p>
                 <p className="mt-3 text-muted-foreground leading-relaxed">
-                  The content structure supports SEO fundamentals, with headings aligned to page intent and clean internal
-                  linking. The contact flow stays simple and reliable.
+                  Next.js routing supports SEO friendly pages and clean internal linking. A PostgreSQL and Prisma backend
+                  was implemented during development, then dropped since the client scope did not require a database.
                 </p>
               </Card>
 
               <Card className="p-6 bg-card border-border">
                 <h2 className="text-2xl font-semibold">Key features</h2>
                 <ul className="mt-3 space-y-2 text-muted-foreground">
-                  <li>Clear service presentation and structured navigation.</li>
-                  <li>Responsive layout built for real clients and real devices.</li>
-                  <li>Accessible form labels and predictable focus behavior.</li>
-                  <li>SEO oriented structure and content hierarchy.</li>
+                  <li>Service pages structured for search intent and easy scanning.</li>
+                  <li>Responsive sections built for real client content updates.</li>
+                  <li>Accessible form labels, focus states, and clear calls to action.</li>
+                  <li>SEO friendly routing, headings, and internal linking.</li>
+                  <li>API routes and database layer prototyped during development.</li>
                 </ul>
               </Card>
 
               <Card className="p-6 bg-card border-border">
                 <h2 className="text-2xl font-semibold">Tech stack</h2>
                 <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tech stack list">
-                  {["HTML", "CSS", "TypeScript", "Tailwind"].map((t) => (
+                  {[
+                    "Next.js",
+                    "React",
+                    "TypeScript",
+                    "Tailwind",
+                    "Node.js",
+                    "Next.js API routes",
+                    "PostgreSQL",
+                    "Prisma",
+                  ].map((t) => (
                     <li key={t} className="px-3 py-1 rounded border border-border bg-muted text-sm">
                       {t}
                     </li>
                   ))}
                 </ul>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  Database and Prisma were developed during the build, then removed since the final scope did not need it.
+                </p>
               </Card>
             </article>
 
