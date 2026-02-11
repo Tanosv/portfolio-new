@@ -798,11 +798,28 @@ const Index = () => {
       </main>
 
       <footer className="py-8 border-t border-border relative">
-        <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2026 Tanguy Osvald. All rights reserved.</p>
-        </div>
-      </footer>
+  <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
+
+  <div className="container mx-auto px-4 text-center text-muted-foreground space-y-4">
+    <p>© 2026 Tanguy Osvald. All rights reserved.</p>
+
+    <div className="flex justify-center gap-6 text-sm">
+      <Link
+        to="/legal-notice"
+        className="hover:text-foreground transition-colors"
+      >
+        Legal Notice
+      </Link>
+
+      <Link
+        to="/privacy-policy"
+        className="hover:text-foreground transition-colors"
+      >
+        Privacy Policy
+      </Link>
+    </div>
+  </div>
+</footer>
     </div>
   );
 };
