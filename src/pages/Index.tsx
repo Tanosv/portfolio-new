@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Boxes, Cloud, Code2, Database, Lock, Mail, PartyPopper, Server, ShieldCheck, Github, Linkedin } from "lucide-react";
+import { Boxes, Cloud, Code2, Database, Lock, Mail, PartyPopper, Server, ShieldCheck } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -373,17 +373,31 @@ const Index = () => {
           />
 
           <div className="container relative z-10 mx-auto px-4 text-center animate-fade-in">
-            <div className="medieval-border inline-block px-12 py-8 mb-8">
-              <h1 className="leading-tight pb-4 text-8xl md:text-8xl mb-2 font-bold bg-gradient-to-r from-foreground via-accent to-foreground bg-clip-text text-transparent">
-                Tanguy Osvald
+            <div className="medieval-border inline-block px-6 py-6 sm:px-10 sm:py-7 md:px-12 md:py-8 mb-6 sm:mb-8">
+              <h1
+                className="
+                  font-bold
+                  leading-[1.06]
+                  tracking-tight
+                  text-[clamp(2.8rem,12vw,6rem)]
+                  sm:text-[clamp(3.2rem,10vw,6.5rem)]
+                  md:text-7xl
+                  lg:text-8xl
+                  bg-gradient-to-r from-foreground via-accent to-foreground bg-clip-text text-transparent
+                  break-words
+                  pb-4
+                "
+              >
+                <span className="block sm:inline">Tanguy</span>
+                <span className="block sm:inline sm:pl-3">Osvald</span>
               </h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-muted-foreground mb-4">Web Developer and DevOps</p>
+            <p className="text-base sm:text-xl md:text-2xl text-muted-foreground mb-4">Web Developer and DevOps</p>
 
             <div className="ornate-divider max-w-md mx-auto my-8" aria-hidden="true" />
 
-            <p className="text-lg text-muted-foreground mb-12 max-w-xl mx-auto">
+            <p className="text-sm sm:text-lg text-muted-foreground mb-10 sm:mb-12 max-w-xl mx-auto px-2 sm:px-0">
               Turning ideas into reliable digital products through creative engineering.
             </p>
 
@@ -690,11 +704,7 @@ const Index = () => {
                       />
                     </div>
 
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group"
-                    >
+                    <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group">
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <Mail className="w-4 h-4" aria-hidden="true" />
                         Send message
@@ -771,8 +781,6 @@ const Index = () => {
                         </div>
                       )}
                     </div>
-
-                    
                   </div>
                 </Card>
               </aside>
