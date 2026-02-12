@@ -167,7 +167,9 @@ const Index = () => {
     if (!section) return;
 
     window.setTimeout(() => {
-      document.getElementById(section)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      document
+        .getElementById(section)
+        ?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
       navigate("/", { replace: true });
     }, 0);
   }, [location.search, navigate, prefersReducedMotion]);
@@ -523,10 +525,14 @@ const Index = () => {
               <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Projects</h2>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list" aria-label="Project cards">
+            <div
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch"
+              role="list"
+              aria-label="Project cards"
+            >
               {projects.map((project) => (
-                <article key={project.title} role="listitem">
-                  <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)]">
+                <article key={project.title} role="listitem" className="h-full">
+                  <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)] h-full flex flex-col">
                     <div className="relative">
                       {project.imageSrc ? (
                         <div className="p-4 pb-0">
@@ -560,7 +566,7 @@ const Index = () => {
                       )}
                     </div>
 
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-1">
                       <div className="mb-4 flex items-start gap-3">
                         <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center border border-accent/20">
                           <Code2 className="w-6 h-6 text-accent" aria-hidden="true" />
@@ -582,7 +588,12 @@ const Index = () => {
                         ))}
                       </ul>
 
-                      <Button asChild variant="outline" size="sm" className="w-full border-accent/40 text-accent hover:bg-accent/10">
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-accent/40 text-accent hover:bg-accent/10 mt-auto"
+                      >
                         <Link to={project.routePath} aria-label={`Open project page for ${project.title}`}>
                           View project page
                         </Link>
@@ -704,7 +715,11 @@ const Index = () => {
                       />
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group"
+                    >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <Mail className="w-4 h-4" aria-hidden="true" />
                         Send message
