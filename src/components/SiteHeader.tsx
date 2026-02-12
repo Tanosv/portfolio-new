@@ -1,13 +1,12 @@
 import { useEffect, useId, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
 
 type SectionId = "home" | "skills" | "projects" | "contact";
 
 type Props = {
-  onHomeScroll,
-  activeSection,
+  onHomeScroll: (id: SectionId) => void;
+  activeSection: SectionId;
 };
 
 export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
@@ -24,12 +23,22 @@ export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
   }, [location.pathname]);
 
   const go = (id: SectionId) => {
+    setNavOpen(false);
+
     if (onHome) {
       onHomeScroll(id);
       return;
     }
+
     navigate(`/?section=${id}`);
   };
+
+  const items: Array<{ id: SectionId; label: string }> = [
+    { id: "home", label: "Home" },
+    { id: "skills", label: "Skills" },
+    { id: "projects", label: "Projects" },
+    { id: "contact", label: "Contact" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -37,21 +46,16 @@ export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <button
-  type="button"
-  onClick={() => onHomeScroll("home")}
-  className="text-xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent"
-  aria-label="Back to top"
->
-  Tanguy Osvald
-</button>
+              type="button"
+              onClick={() => go("home")}
+              className="text-xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent"
+              aria-label="Back to top"
+            >
+              Tanguy Osvald
+            </button>
 
             <ul className="hidden md:flex items-center gap-8">
-              {[
-                { id: "home" as const, label: "Home" },
-                { id: "skills" as const, label: "Skills" },
-                { id: "projects" as const, label: "Projects" },
-                { id: "contact" as const, label: "Contact" },
-              ].map((item) => (
+              {items.map((item) => (
                 <li key={item.id}>
                   <button
                     type="button"
@@ -86,17 +90,9 @@ export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
           </div>
         </div>
 
-        <div
-          id={mobileMenuId}
-          className={navOpen ? "md:hidden border-t border-border bg-background/95 backdrop-blur-md" : "hidden"}
-        >
+        <div id={mobileMenuId} className={navOpen ? "md:hidden border-t border-border bg-background/95 backdrop-blur-md" : "hidden"}>
           <div className="container mx-auto px-4 py-4 space-y-2">
-            {[
-              { id: "home" as const, label: "Home" },
-              { id: "skills" as const, label: "Skills" },
-              { id: "projects" as const, label: "Projects" },
-              { id: "contact" as const, label: "Contact" },
-            ].map((item) => (
+            {items.map((item) => (
               <button
                 key={item.id}
                 type="button"
