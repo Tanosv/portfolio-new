@@ -1,59 +1,61 @@
-Portfolio – Tanguy Osvald
+# Portfolio — Tanguy Osvald
 
-This repository contains the source code of my personal portfolio website.
+A modern, responsive portfolio website built with React and TypeScript to showcase my work and approach to front-end development.
 
-The project was built to showcase my work and reflect how I approach front end architecture, performance and deployment in a real world context.
-It is a single page application developed with React and TypeScript, structured with reusable components and clear separation of concerns.
+##  Overview
 
-Project Overview
+This single-page application demonstrates best practices in front-end architecture, performance optimization, and clean code structure. Built with a focus on maintainability and user experience, it features reusable components and clear separation of concerns.
 
-The website includes:
+##  Features
 
-A structured landing page with smooth navigation
+- **Structured landing page** with smooth navigation and animations
+- **Skills showcase** highlighting technical expertise
+- **Project portfolio** with dedicated pages for each project
+- **Contact form** powered by Netlify Forms
+- **Legal & privacy pages** for compliance
+- **SEO optimization** with structured data
+- **Accessibility-first** design following WCAG guidelines
+- **Performance-optimized** with lazy loading and code splitting
 
-A skills section
+##  Tech Stack
 
-Dedicated project pages
+- **React** — Component-based UI framework
+- **TypeScript** — Type-safe development
+- **Vite** — Lightning-fast build tool
+- **Tailwind CSS** — Utility-first styling
+- **React Router** — Client-side routing
+- **React Helmet Async** — SEO and meta management
+- **Netlify** — Deployment and forms handling
 
-A working contact form handled through Netlify Forms
+##  Project Structure
 
-Legal and privacy pages
-
-Structured data for SEO
-
-Particular attention was given to performance, accessibility and clean routing behavior.
-
-Architecture
+```
 Portfolio/
-├── public/
+├── public/              # Static assets
 ├── src/
-│   ├── components/
-│   ├── hooks/
-│   ├── lib/
-│   ├── pages/
-│   ├── App.tsx
-│   └── main.tsx
-├── netlify.toml
-├── index.html
-├── tailwind.config.ts
-└── package.json
+│   ├── components/      # Reusable UI components
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions and helpers
+│   ├── pages/           # Page components
+│   ├── App.tsx          # Main application component
+│   └── main.tsx         # Application entry point
+├── netlify.toml         # Netlify configuration
+├── index.html           # HTML template
+├── tailwind.config.ts   # Tailwind configuration
+└── package.json         # Dependencies and scripts
+```
+
+The architecture separates layout components, reusable UI elements, and page logic to maintain a clean and scalable codebase.
 
 
-The structure separates layout components, reusable UI elements and page logic to keep the codebase readable and maintainable.
+##  Performance
 
-Technologies
+Special attention has been given to:
+- Clean routing behavior without unnecessary re-renders
+- Optimized asset loading and code splitting
+- Accessible markup and ARIA labels
+- Mobile-first responsive design
+- Fast page load times and smooth interactions
 
-React
 
-TypeScript
-
-Vite
-
-Tailwind CSS
-
-React Router
-
-React Helmet Async
-
-Netlify
 
