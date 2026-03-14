@@ -159,17 +159,7 @@ export default function ProjectClimatserv17() {
                     </a>
                   </Button>
 
-                  <Button asChild variant="outline" className="w-full border-accent text-accent hover:bg-accent/10">
-                    <a
-                      href="https://github.com/Aurel1407/ClimatServ17"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Open ClimatServ 17 source code on GitHub in a new tab"
-                    >
-                      <Github className="w-4 h-4 mr-2" aria-hidden="true" />
-                      GitHub
-                    </a>
-                  </Button>
+                  
                 </div>
               </Card>
             </aside>
