@@ -69,7 +69,7 @@ export default function SiteHeader({ onHomeScroll, activeSection }: Props) {
                     <span
                       aria-hidden="true"
                       className={`absolute -bottom-1 left-0 w-full h-0.5 bg-accent transition-transform ${
-                        activeSection === item.id ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                        activeSection === item.id ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100"
                       }`}
                     />
                   </button>

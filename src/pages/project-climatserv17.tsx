@@ -3,8 +3,9 @@ import { ExternalLink, Github } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
-import { SITE_URL } from "@/lib/config"
-import SiteFooter from "@/components/SiteFooter";
+
+import { SITE_URL } from "@/lib/site";
+const OG_IMAGE_URL = `${SITE_URL}/images/projects/Screen_Climatserv17_Banner.webp`;
 
 export default function ProjectClimatserv17() {
   const title = "Project ClimatServ 17";
@@ -166,7 +167,11 @@ export default function ProjectClimatserv17() {
           </div>
         </section>
 
-        <SiteFooter />
+        <footer className="py-10 border-t border-border">
+          <div className="container mx-auto px-4 text-center text-muted-foreground">
+            <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
+          </div>
+        </footer>
       </main>
     </div>
   );

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Boxes, Cloud, Code2, Database, Lock, Mail, PartyPopper, Server, ShieldCheck } from "lucide-react";
+import { Code2, Database, Globe, Leaf, Lock, Mail, PartyPopper, Server, ShieldCheck } from "lucide-react";
+
 import SiteHeader from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,6 +26,8 @@ type ProjectCard = {
   routePath: string;
   imageSrc?: string;
   imageAlt?: string;
+  confidential?: boolean;
+  inDevelopment?: boolean;
 };
 
 declare global {
@@ -33,6 +36,10 @@ declare global {
     __questLogged?: boolean;
   }
 }
+
+import { SITE_URL, OG_IMAGE_URL } from "@/lib/site";
+
+const FORM_THROTTLE_MS = 30_000;
 
 const encodeForm = (data: Record<string, string>) =>
   Object.keys(data)
@@ -46,6 +53,7 @@ const Index = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(reducedMotionQuery.matches);
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState<"home" | "skills" | "projects" | "contact">("home");
   const [lastSubmit, setLastSubmit] = useState(0);
@@ -101,24 +109,11 @@ const Index = () => {
   useEffect(() => {
     const tickingRef = { current: false };
 
-    const updateActiveSection = () => {
-      const sections: Array<"home" | "skills" | "projects" | "contact"> = ["home", "skills", "projects", "contact"];
-      const current = sections.find((section) => {
-        const el = document.getElementById(section);
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= 150 && rect.bottom >= 150;
-      });
-      if (current) setActiveSection(current);
-    };
-
     const handleScroll = () => {
       if (tickingRef.current) return;
       tickingRef.current = true;
-
       window.requestAnimationFrame(() => {
         setScrollY(window.scrollY);
-        updateActiveSection();
         tickingRef.current = false;
       });
     };
@@ -126,6 +121,29 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = ["home", "skills", "projects", "contact"] as const;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id as typeof sections[number]);
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
+    );
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!window.__questLogged) {
       window.__questLogged = true;
 
@@ -147,8 +165,6 @@ const Index = () => {
     });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-
       try {
         delete (window as unknown as Record<string, unknown>).database;
       } catch {
@@ -186,8 +202,8 @@ const Index = () => {
       { name: "Tailwind", icon: Code2, size: "medium", color: "from-accent to-accent/60" },
       { name: "Git", icon: Code2, size: "small", color: "from-accent/80 to-accent/40" },
       { name: "Docker", icon: Server, size: "small", color: "from-accent/60 to-accent/30" },
-      { name: "Kubernetes", icon: Boxes, size: "medium", color: "from-accent/70 to-accent/35" },
-      { name: "AWS", icon: Cloud, size: "medium", color: "from-accent/75 to-accent/40" },
+      { name: "Next.js", icon: Globe, size: "medium", color: "from-accent/70 to-accent/35" },
+      { name: "Spring Boot", icon: Leaf, size: "medium", color: "from-accent/75 to-accent/40" },
     ],
     [],
   );
@@ -221,6 +237,22 @@ const Index = () => {
         description: "Internal API project built during an internship, details are confidential.",
         tech: ["Node.js", "TypeScript", "REST"],
         routePath: "/projects/bandai-namco",
+        confidential: true,
+      },
+      {
+        title: "SigilAI",
+        description: "Fullstack knowledge management app with a markdown journal, research watchlist, and AI query layer.",
+        tech: ["Java 21", "Spring Boot 3", "React 18", "TypeScript", "PostgreSQL", "Claude API", "Ollama"],
+        routePath: "/projects/sigilai",
+        inDevelopment: true,
+      },
+      {
+        title: "This Portfolio",
+        description: "Custom-built React portfolio with parallax effects, a hidden quest, and Netlify Forms contact.",
+        tech: ["React 18", "TypeScript", "Vite", "Tailwind", "shadcn/ui", "Netlify"],
+        routePath: "/projects/portfolio",
+        imageSrc: "/images/projects/Screen_Portfolio_Banner.png",
+        imageAlt: "Portfolio banner preview.",
       },
     ],
     [],
@@ -238,8 +270,18 @@ const Index = () => {
     e.preventDefault();
     if (honeypot) return;
 
+    const errors: { name?: string; email?: string; message?: string } = {};
+    if (formData.name.trim().length < 2) errors.name = "Name must be at least 2 characters.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "Please enter a valid email address.";
+    if (formData.message.trim().length < 10) errors.message = "Message must be at least 10 characters.";
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+    setFormErrors({});
+
     const now = Date.now();
-    if (now - lastSubmit < 30000) {
+    if (now - lastSubmit < FORM_THROTTLE_MS) {
       const msg = "Please wait before submitting again.";
       toast.error(msg);
       setSrStatus(msg);
@@ -274,6 +316,7 @@ const Index = () => {
       toast.success(msg);
       setSrStatus(msg);
       setFormData({ name: "", email: "", message: "" });
+      setFormErrors({});
     } catch {
       const msg = "Message not sent, please check your connection and try again.";
       toast.error(msg);
@@ -525,45 +568,64 @@ const Index = () => {
               <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Projects</h2>
             </div>
 
-            <div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch"
-              role="list"
-              aria-label="Project cards"
-            >
-              {projects.map((project) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list" aria-label="Project cards">
+              {projects.map((project) => {
+                let cardBanner: React.ReactNode;
+                if (project.imageSrc) {
+                  cardBanner = (
+                    <div className="p-4 pb-0">
+                      <div className="rounded-xl overflow-hidden border border-border bg-muted/20 shadow-sm">
+                        <div className="h-28 md:h-32 w-full">
+                          <img
+                            src={project.imageSrc}
+                            alt={project.imageAlt || `${project.title} preview.`}
+                            className="h-full w-full object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="h-px w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent" aria-hidden="true" />
+                      </div>
+                    </div>
+                  );
+                } else if (project.confidential) {
+                  cardBanner = (
+                    <div className="relative h-36 overflow-hidden bg-gradient-to-br from-accent/20 via-background to-accent/10">
+                      <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
+                        <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-accent/25 blur-2xl" />
+                        <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-accent/20 blur-2xl" />
+                      </div>
+                      <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-3 py-1 backdrop-blur">
+                        <Lock className="h-4 w-4 text-accent" aria-hidden="true" />
+                        <span className="text-xs text-muted-foreground">Confidential</span>
+                      </div>
+                      <div className="absolute bottom-4 left-5 flex items-center gap-2 text-sm">
+                        <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
+                        <span className="text-muted-foreground">Internal API</span>
+                      </div>
+                    </div>
+                  );
+                } else if (project.inDevelopment) {
+                  cardBanner = (
+                    <div className="relative h-36 overflow-hidden bg-gradient-to-br from-accent/10 via-background to-primary/10">
+                      <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
+                        <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-primary/25 blur-2xl" />
+                        <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-accent/20 blur-2xl" />
+                      </div>
+                      <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-3 py-1 backdrop-blur">
+                        <Code2 className="h-4 w-4 text-accent" aria-hidden="true" />
+                        <span className="text-xs text-muted-foreground">In development</span>
+                      </div>
+                    </div>
+                  );
+                } else {
+                  cardBanner = null;
+                }
+
+                return (
                 <article key={project.title} role="listitem" className="h-full">
-                  <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)] h-full flex flex-col">
+                  <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)] flex flex-col h-full">
                     <div className="relative">
-                      {project.imageSrc ? (
-                        <div className="p-4 pb-0">
-                          <div className="rounded-xl overflow-hidden border border-border bg-muted/20 shadow-sm">
-                            <div className="h-28 md:h-32 w-full">
-                              <img
-                                src={project.imageSrc}
-                                alt={project.imageAlt || `${project.title} preview.`}
-                                className="h-full w-full object-contain"
-                                loading="lazy"
-                              />
-                            </div>
-                            <div className="h-px w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent" aria-hidden="true" />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="relative h-36 overflow-hidden bg-gradient-to-br from-accent/20 via-background to-accent/10">
-                          <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
-                            <div className="absolute -top-10 -left-10 h-40 w-40 rounded-full bg-accent/25 blur-2xl" />
-                            <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-accent/20 blur-2xl" />
-                          </div>
-                          <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-3 py-1 backdrop-blur">
-                            <Lock className="h-4 w-4 text-accent" aria-hidden="true" />
-                            <span className="text-xs text-muted-foreground">Confidential</span>
-                          </div>
-                          <div className="absolute bottom-4 left-5 flex items-center gap-2 text-sm">
-                            <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
-                            <span className="text-muted-foreground">Internal API</span>
-                          </div>
-                        </div>
-                      )}
+                      {cardBanner}
                     </div>
 
                     <div className="p-6 flex flex-col flex-1">
@@ -588,12 +650,7 @@ const Index = () => {
                         ))}
                       </ul>
 
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-accent/40 text-accent hover:bg-accent/10 mt-auto"
-                      >
+                      <Button asChild variant="outline" size="sm" className="w-full border-accent/40 text-accent hover:bg-accent/10 mt-auto">
                         <Link to={project.routePath} aria-label={`Open project page for ${project.title}`}>
                           View project page
                         </Link>
@@ -606,7 +663,8 @@ const Index = () => {
                     </div>
                   </Card>
                 </article>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -675,8 +733,14 @@ const Index = () => {
                         minLength={2}
                         maxLength={100}
                         autoComplete="name"
-                        aria-describedby="contact-hint"
+                        aria-invalid={!!formErrors.name}
+                        aria-describedby={formErrors.name ? "name-error" : "contact-hint"}
                       />
+                      {formErrors.name && (
+                        <p id="name-error" role="alert" className="mt-1 text-xs text-destructive">
+                          {formErrors.name}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -693,8 +757,14 @@ const Index = () => {
                         className="bg-background border-border focus:border-accent"
                         required
                         autoComplete="email"
-                        aria-describedby="contact-hint"
+                        aria-invalid={!!formErrors.email}
+                        aria-describedby={formErrors.email ? "email-error" : "contact-hint"}
                       />
+                      {formErrors.email && (
+                        <p id="email-error" role="alert" className="mt-1 text-xs text-destructive">
+                          {formErrors.email}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -708,11 +778,17 @@ const Index = () => {
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className="bg-background border-border focus:border-accent min-h-[150px]"
                         required
+                        aria-invalid={!!formErrors.message}
+                        aria-describedby={formErrors.message ? "message-error" : "contact-hint"}
                         minLength={10}
                         maxLength={1000}
                         autoComplete="off"
-                        aria-describedby="contact-hint"
                       />
+                      {formErrors.message && (
+                        <p id="message-error" role="alert" className="mt-1 text-xs text-destructive">
+                          {formErrors.message}
+                        </p>
+                      )}
                     </div>
 
                     <Button
@@ -796,6 +872,7 @@ const Index = () => {
                         </div>
                       )}
                     </div>
+
                   </div>
                 </Card>
               </aside>
@@ -804,7 +881,12 @@ const Index = () => {
         </section>
       </main>
 
-      <SiteFooter />
+      <footer className="py-8 border-t border-border relative">
+        <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
+        <div className="container mx-auto px-4 text-center text-muted-foreground">
+          <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };
