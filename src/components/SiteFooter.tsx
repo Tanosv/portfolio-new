@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function LinkedInIcon({ className }: { readonly className?: string }) {
   return (
@@ -17,6 +18,9 @@ function GitHubIcon({ className }: { readonly className?: string }) {
 }
 
 export default function SiteFooter() {
+  const { t } = useTranslation();
+  const { lang = "fr" } = useParams<{ lang?: string }>();
+
   return (
     <footer className="py-10 border-t border-border relative">
       <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
@@ -28,7 +32,7 @@ export default function SiteFooter() {
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-md border border-border bg-muted/20 px-3 py-2 hover:bg-muted/30 transition-colors"
-            aria-label="Open LinkedIn profile"
+            aria-label={t("footer.open_linkedin")}
           >
             <LinkedInIcon className="h-4 w-4 text-accent" />
             <span className="text-sm">LinkedIn</span>
@@ -39,7 +43,7 @@ export default function SiteFooter() {
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 rounded-md border border-border bg-muted/20 px-3 py-2 hover:bg-muted/30 transition-colors"
-            aria-label="Open GitHub profile"
+            aria-label={t("footer.open_github")}
           >
             <GitHubIcon className="h-4 w-4 text-accent" />
             <span className="text-sm">GitHub</span>
@@ -47,16 +51,16 @@ export default function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-          <Link to="/legal-notice" className="hover:text-foreground transition-colors">
-            Legal Notice
+          <Link to={`/${lang}/legal-notice`} className="hover:text-foreground transition-colors">
+            {t("footer.legal_notice")}
           </Link>
           <span aria-hidden="true">•</span>
-          <Link to="/privacy-policy" className="hover:text-foreground transition-colors">
-            Privacy Policy
+          <Link to={`/${lang}/privacy-policy`} className="hover:text-foreground transition-colors">
+            {t("footer.privacy_policy")}
           </Link>
         </div>
 
-        <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Tanguy Osvald. {t("footer.all_rights")}</p>
       </div>
     </footer>
   );

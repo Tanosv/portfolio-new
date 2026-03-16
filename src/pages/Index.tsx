@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "sonner";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Code2, Database, Globe, Leaf, Lock, Mail, PartyPopper, Server, ShieldCheck } from "lucide-react";
 
 import SiteHeader from "@/components/SiteHeader";
@@ -10,6 +11,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SiteFooter from "@/components/SiteFooter";
+
+import { SITE_URL, OG_IMAGE_URL } from "@/lib/site";
 
 type Skill = {
   name: string;
@@ -36,8 +39,6 @@ declare global {
   }
 }
 
-import { SITE_URL, OG_IMAGE_URL } from "@/lib/site";
-
 const FORM_THROTTLE_MS = 30_000;
 
 const encodeForm = (data: Record<string, string>) =>
@@ -46,6 +47,8 @@ const encodeForm = (data: Record<string, string>) =>
     .join("&");
 
 const Index = () => {
+  const { t, i18n } = useTranslation();
+  const { lang = "fr" } = useParams<{ lang?: string }>();
   const mainRef = useRef<HTMLElement | null>(null);
 
   const reducedMotionQuery = useMemo(() => window.matchMedia("(prefers-reduced-motion: reduce)"), []);
@@ -70,11 +73,11 @@ const Index = () => {
       "@context": "https://schema.org",
       "@type": "Person",
       name: "Tanguy Osvald",
-      jobTitle: "Web Developer",
+      jobTitle: lang === "fr" ? "Développeur Web" : "Web Developer",
       url: SITE_URL,
       sameAs: ["https://www.linkedin.com/in/tanguy-osv/", "https://github.com/Tanosv"],
     }),
-    [],
+    [lang],
   );
 
   useEffect(() => {
@@ -98,12 +101,12 @@ const Index = () => {
     setQuestUnlocked(true);
     setCelebrate(true);
 
-    const msg = "Quest unlocked, check the reward panel next to the contact form.";
+    const msg = t("home.quest.unlock_toast");
     toast.success(msg);
     setSrStatus(msg);
 
     window.setTimeout(() => setCelebrate(false), prefersReducedMotion ? 0 : 1800);
-  }, [prefersReducedMotion, questUnlocked]);
+  }, [prefersReducedMotion, questUnlocked, t]);
 
   useEffect(() => {
     const tickingRef = { current: false };
@@ -129,7 +132,7 @@ const Index = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(entry.target.id as typeof sections[number]);
+            setActiveSection(entry.target.id as (typeof sections)[number]);
           }
         });
       },
@@ -185,9 +188,9 @@ const Index = () => {
       document
         .getElementById(section)
         ?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
-      navigate("/", { replace: true });
+      navigate(`/${lang}`, { replace: true });
     }, 0);
-  }, [location.search, navigate, prefersReducedMotion]);
+  }, [location.search, navigate, prefersReducedMotion, lang]);
 
   const skills: Skill[] = useMemo(
     () => [
@@ -217,44 +220,44 @@ const Index = () => {
     () => [
       {
         title: "Alizé",
-        description: "Coastal planning app with tide and weather data in a clear interface.",
+        description: t("home.projects.alize.description"),
         tech: ["React", "TypeScript", "Tailwind", "API"],
-        routePath: "/projects/alize",
+        routePath: `/${lang}/projects/alize`,
         imageSrc: "/images/projects/Screen_Alize_Banner.webp",
-        imageAlt: "Alizé banner preview.",
+        imageAlt: t("home.projects.alize.image_alt"),
       },
       {
         title: "ClimatServ 17",
-        description: "Production website for a heating and climate services company.",
+        description: t("home.projects.climatserv.description"),
         tech: ["Next.js", "React", "Tailwind", "TypeScript", "API routes", "PostgreSQL", "Prisma", "SEO"],
-        routePath: "/projects/climatserv17",
+        routePath: `/${lang}/projects/climatserv17`,
         imageSrc: "/images/projects/Screen_Climatserv17_Banner.webp",
-        imageAlt: "ClimatServ 17 banner preview.",
+        imageAlt: t("home.projects.climatserv.image_alt"),
       },
       {
         title: "Bandai Namco Internal API",
-        description: "Internal API project built during an internship, details are confidential.",
+        description: t("home.projects.bandai.description"),
         tech: ["Node.js", "TypeScript", "REST"],
-        routePath: "/projects/bandai-namco",
+        routePath: `/${lang}/projects/bandai-namco`,
         confidential: true,
       },
       {
         title: "SigilAI",
-        description: "Fullstack knowledge management app with a markdown journal, research watchlist, and AI query layer.",
+        description: t("home.projects.sigilai.description"),
         tech: ["Java 21", "Spring Boot 3", "React 18", "TypeScript", "PostgreSQL", "Claude API", "Ollama"],
-        routePath: "/projects/sigilai",
+        routePath: `/${lang}/projects/sigilai`,
         inDevelopment: true,
       },
       {
-        title: "This Portfolio",
-        description: "Custom-built React portfolio with parallax effects, a hidden quest, and Netlify Forms contact.",
+        title: t("home.projects.portfolio.title"),
+        description: t("home.projects.portfolio.description"),
         tech: ["React 18", "TypeScript", "Vite", "Tailwind", "shadcn/ui", "Netlify"],
-        routePath: "/projects/portfolio",
+        routePath: `/${lang}/projects/portfolio`,
         imageSrc: "/images/projects/Screen_Portfolio_Banner.png",
-        imageAlt: "Portfolio banner preview.",
+        imageAlt: t("home.projects.portfolio.image_alt"),
       },
     ],
-    [],
+    [lang, t, i18n.language], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const scrollToSection = (id: "home" | "skills" | "projects" | "contact") => {
@@ -270,9 +273,9 @@ const Index = () => {
     if (honeypot) return;
 
     const errors: { name?: string; email?: string; message?: string } = {};
-    if (formData.name.trim().length < 2) errors.name = "Name must be at least 2 characters.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "Please enter a valid email address.";
-    if (formData.message.trim().length < 10) errors.message = "Message must be at least 10 characters.";
+    if (formData.name.trim().length < 2) errors.name = t("home.contact.validation.name");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = t("home.contact.validation.email");
+    if (formData.message.trim().length < 10) errors.message = t("home.contact.validation.message");
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -281,7 +284,7 @@ const Index = () => {
 
     const now = Date.now();
     if (now - lastSubmit < FORM_THROTTLE_MS) {
-      const msg = "Please wait before submitting again.";
+      const msg = t("home.contact.throttle_error");
       toast.error(msg);
       setSrStatus(msg);
       return;
@@ -305,19 +308,19 @@ const Index = () => {
       });
 
       if (!res.ok) {
-        const msg = "Message not sent, please try again later.";
+        const msg = t("home.contact.error_send");
         toast.error(msg);
         setSrStatus(msg);
         return;
       }
 
-      const msg = "Message sent, I will get back to you soon.";
+      const msg = t("home.contact.success");
       toast.success(msg);
       setSrStatus(msg);
       setFormData({ name: "", email: "", message: "" });
       setFormErrors({});
     } catch {
-      const msg = "Message not sent, please check your connection and try again.";
+      const msg = t("home.contact.error_connection");
       toast.error(msg);
       setSrStatus(msg);
     }
@@ -328,21 +331,26 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Helmet>
-        <html lang="en" />
-        <title>Portfolio Tanguy Osvald</title>
+        <html lang={lang} />
+        <title>{t("home.meta.title")}</title>
 
-        <meta name="description" content="Portfolio of Tanguy Osvald, full stack web developer, projects, skills, and contact." />
+        <meta name="description" content={t("home.meta.description")} />
         <meta name="robots" content="index,follow" />
-        <link rel="canonical" href={`${SITE_URL}/`} />
+        <link rel="canonical" href={`${SITE_URL}/${lang}/`} />
+        <link rel="alternate" hrefLang="fr" href={`${SITE_URL}/fr/`} />
+        <link rel="alternate" hrefLang="en" href={`${SITE_URL}/en/`} />
+        <link rel="alternate" hrefLang="x-default" href={`${SITE_URL}/fr/`} />
 
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta property="og:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
-        <meta property="og:url" content={`${SITE_URL}/`} />
+        <meta property="og:title" content={t("home.meta.og_title")} />
+        <meta property="og:description" content={t("home.meta.og_description")} />
+        <meta property="og:url" content={`${SITE_URL}/${lang}/`} />
+        <meta property="og:image" content={OG_IMAGE_URL} />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Tanguy Osvald, Web Developer, Portfolio" />
-        <meta name="twitter:description" content="Projects, skills, and contact, portfolio of a full stack web developer." />
+        <meta name="twitter:title" content={t("home.meta.og_title")} />
+        <meta name="twitter:description" content={t("home.meta.og_description")} />
+        <meta name="twitter:image" content={OG_IMAGE_URL} />
 
         <script type="application/ld+json">{JSON.stringify(jsonLdPerson)}</script>
       </Helmet>
@@ -372,7 +380,7 @@ const Index = () => {
         }}
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-md focus:bg-background focus:text-foreground focus:border focus:border-border"
       >
-        Skip to main content
+        {t("home.hero.skip_to_content")}
       </a>
 
       <div className="sr-only" aria-live="polite">
@@ -437,12 +445,12 @@ const Index = () => {
               </h1>
             </div>
 
-            <p className="text-base sm:text-xl md:text-2xl text-muted-foreground mb-4">Web Developer and DevOps</p>
+            <p className="text-base sm:text-xl md:text-2xl text-muted-foreground mb-4">{t("home.hero.subtitle")}</p>
 
             <div className="ornate-divider max-w-md mx-auto my-8" aria-hidden="true" />
 
             <p className="text-sm sm:text-lg text-muted-foreground mb-10 sm:mb-12 max-w-xl mx-auto px-2 sm:px-0">
-              Turning ideas into reliable digital products through creative engineering.
+              {t("home.hero.tagline")}
             </p>
 
             <div className="flex gap-4 justify-center flex-wrap">
@@ -450,9 +458,9 @@ const Index = () => {
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90 relative overflow-hidden group"
                 onClick={() => scrollToSection("projects")}
-                aria-label="Go to projects section"
+                aria-label={t("home.hero.go_to_projects_aria")}
               >
-                <span className="relative z-10">View Projects</span>
+                <span className="relative z-10">{t("home.hero.view_projects")}</span>
                 <div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
                   aria-hidden="true"
@@ -464,15 +472,15 @@ const Index = () => {
                 variant="outline"
                 className="border-accent text-accent hover:bg-accent/10"
                 onClick={() => scrollToSection("contact")}
-                aria-label="Go to contact section"
+                aria-label={t("home.hero.go_to_contact_aria")}
               >
-                Get In Touch
+                {t("home.hero.get_in_touch")}
               </Button>
             </div>
           </div>
         </section>
 
-        <section id="skills" aria-label="Skills" className="py-24 relative overflow-hidden">
+        <section id="skills" aria-label={t("nav.skills")} className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-10 right-20 w-72 h-72 bg-secondary/50 rounded-full blur-3xl"
@@ -487,26 +495,25 @@ const Index = () => {
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Skills and Expertise</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Full stack development across modern technologies</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("home.skills.title")}</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">{t("home.skills.subtitle")}</p>
             </div>
 
-            <div role="list" aria-label="Skills list" className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-3 gap-4 place-items-center px-2 md:hidden">
+            <div className="max-w-6xl mx-auto">
+              <ul className="grid grid-cols-3 gap-4 place-items-center px-2 md:hidden" aria-label={t("home.skills.list_aria")}>
                 {skills.map((skill) => (
-                  <div
+                  <li
                     key={skill.name}
-                    role="listitem"
                     className={`${skillSizes[skill.size]} rounded-full bg-gradient-to-br ${skill.color} backdrop-blur-sm border border-accent/30 flex flex-col items-center justify-center gap-2 p-4 shadow-lg`}
-                    aria-label={`Skill ${skill.name}`}
+                    aria-label={t("home.skills.item_aria", { name: skill.name })}
                   >
                     <skill.icon className="w-6 h-6 text-background" aria-hidden="true" />
                     <span className="font-semibold text-background text-center leading-tight">{skill.name}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <div className="relative min-h-[560px] hidden md:block">
+              <div className="relative min-h-[560px] hidden md:block" aria-hidden="true">
                 <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-4 p-8">
                   {skills.map((skill, index) => {
                     const positions = [
@@ -536,7 +543,7 @@ const Index = () => {
                           animation: prefersReducedMotion ? undefined : `float ${3 + index * 0.45}s ease-in-out infinite`,
                           animationDelay: prefersReducedMotion ? undefined : `${index * 0.18}s`,
                         }}
-                        aria-label={`Skill ${skill.name}`}
+                        aria-label={t("home.skills.item_aria", { name: skill.name })}
                       >
                         <skill.icon className="w-6 h-6 text-background" aria-hidden="true" />
                         <span className="font-semibold text-background text-center leading-tight">{skill.name}</span>
@@ -549,7 +556,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="projects" aria-label="Projects" className="py-24 relative overflow-hidden">
+        <section id="projects" aria-label={t("nav.projects")} className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-20 left-10 w-96 h-96 bg-primary/50 rounded-full blur-3xl"
@@ -564,10 +571,10 @@ const Index = () => {
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Featured Projects</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("home.projects.title")}</h2>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list" aria-label="Project cards">
+            <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" aria-label={t("home.projects.cards_aria")}>
               {projects.map((project) => {
                 let cardBanner: React.ReactNode;
                 if (project.imageSrc) {
@@ -595,11 +602,11 @@ const Index = () => {
                       </div>
                       <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-3 py-1 backdrop-blur">
                         <Lock className="h-4 w-4 text-accent" aria-hidden="true" />
-                        <span className="text-xs text-muted-foreground">Confidential</span>
+                        <span className="text-xs text-muted-foreground">{t("home.projects.confidential_label")}</span>
                       </div>
                       <div className="absolute bottom-4 left-5 flex items-center gap-2 text-sm">
                         <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
-                        <span className="text-muted-foreground">Internal API</span>
+                        <span className="text-muted-foreground">{t("home.projects.internal_api_label")}</span>
                       </div>
                     </div>
                   );
@@ -612,7 +619,7 @@ const Index = () => {
                       </div>
                       <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-accent/30 bg-background/40 px-3 py-1 backdrop-blur">
                         <Code2 className="h-4 w-4 text-accent" aria-hidden="true" />
-                        <span className="text-xs text-muted-foreground">In development</span>
+                        <span className="text-xs text-muted-foreground">{t("home.projects.in_development_label")}</span>
                       </div>
                     </div>
                   );
@@ -621,54 +628,54 @@ const Index = () => {
                 }
 
                 return (
-                <article key={project.title} role="listitem" className="h-full">
-                  <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)] flex flex-col h-full">
-                    <div className="relative">
-                      {cardBanner}
-                    </div>
-
-                    <div className="p-6 flex flex-col flex-1">
-                      <div className="mb-4 flex items-start gap-3">
-                        <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center border border-accent/20">
-                          <Code2 className="w-6 h-6 text-accent" aria-hidden="true" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="text-xl font-bold leading-tight">{project.title}</h3>
-                          <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{project.description}</p>
-                        </div>
+                  <li key={project.title} className="h-full">
+                    <Card className="group relative overflow-hidden bg-card border-border transition-all duration-300 hover:border-accent hover:shadow-[0_0_0_1px_hsl(var(--accent)/0.35)] flex flex-col h-full">
+                      <div className="relative">
+                        {cardBanner}
                       </div>
 
-                      <ul className="flex flex-wrap gap-2 mb-5" aria-label={`Tech tags for ${project.title}`}>
-                        {project.tech.map((t) => (
-                          <li
-                            key={t}
-                            className="px-3 py-1 rounded border border-border bg-muted/40 text-xs text-muted-foreground group-hover:border-accent/30 transition-colors"
-                          >
-                            {t}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="p-6 flex flex-col flex-1">
+                        <div className="mb-4 flex items-start gap-3">
+                          <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center border border-accent/20">
+                            <Code2 className="w-6 h-6 text-accent" aria-hidden="true" />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-xl font-bold leading-tight">{project.title}</h3>
+                            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{project.description}</p>
+                          </div>
+                        </div>
 
-                      <Button asChild variant="outline" size="sm" className="w-full border-accent/40 text-accent hover:bg-accent/10 mt-auto">
-                        <Link to={project.routePath} aria-label={`Open project page for ${project.title}`}>
-                          View project page
-                        </Link>
-                      </Button>
-                    </div>
+                        <ul className="flex flex-wrap gap-2 mb-5" aria-label={t("home.projects.tech_tags_aria", { title: project.title })}>
+                          {project.tech.map((tech) => (
+                            <li
+                              key={tech}
+                              className="px-3 py-1 rounded border border-border bg-muted/40 text-xs text-muted-foreground group-hover:border-accent/30 transition-colors"
+                            >
+                              {tech}
+                            </li>
+                          ))}
+                        </ul>
 
-                    <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">
-                      <div className="absolute -top-14 -right-14 h-40 w-40 rounded-full bg-accent/10 blur-2xl" />
-                      <div className="absolute -bottom-14 -left-14 h-40 w-40 rounded-full bg-accent/10 blur-2xl" />
-                    </div>
-                  </Card>
-                </article>
+                        <Button asChild variant="outline" size="sm" className="w-full border-accent/40 text-accent hover:bg-accent/10 mt-auto">
+                          <Link to={project.routePath} aria-label={t("home.projects.open_page_aria", { title: project.title })}>
+                            {t("home.projects.view_page")}
+                          </Link>
+                        </Button>
+                      </div>
+
+                      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">
+                        <div className="absolute -top-14 -right-14 h-40 w-40 rounded-full bg-accent/10 blur-2xl" />
+                        <div className="absolute -bottom-14 -left-14 h-40 w-40 rounded-full bg-accent/10 blur-2xl" />
+                      </div>
+                    </Card>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         </section>
 
-        <section id="contact" aria-label="Contact" className="py-24 relative overflow-hidden">
+        <section id="contact" aria-label={t("nav.contact")} className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true">
             <div
               className="absolute top-10 left-1/4 w-80 h-80 bg-accent/50 rounded-full blur-3xl"
@@ -679,8 +686,8 @@ const Index = () => {
           <div className="container relative z-10 mx-auto px-4">
             <div className="text-center mb-16">
               <div className="ornate-divider max-w-xs mx-auto mb-6" aria-hidden="true" />
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">Let us Connect</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">I am open to work and hear about your project ideas!</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">{t("home.contact.title")}</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">{t("home.contact.subtitle")}</p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_320px] items-start max-w-5xl mx-auto">
@@ -697,12 +704,12 @@ const Index = () => {
                     data-netlify-honeypot="website"
                     onSubmit={handleSubmit}
                     className="space-y-6"
-                    aria-label="Contact form"
+                    aria-label={t("home.contact.form_aria")}
                   >
                     <input type="hidden" name="form-name" value="contact" />
 
                     <div className="sr-only" id="contact-hint">
-                      All fields are required, the message needs at least ten characters.
+                      {t("home.contact.form_hint")}
                     </div>
 
                     <div style={{ position: "absolute", left: "-9999px" }} aria-hidden="true">
@@ -720,7 +727,7 @@ const Index = () => {
 
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium mb-2">
-                        Your name
+                        {t("home.contact.name_label")}
                       </label>
                       <Input
                         id="name"
@@ -744,7 +751,7 @@ const Index = () => {
 
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium mb-2">
-                        Email address
+                        {t("home.contact.email_label")}
                       </label>
                       <Input
                         id="email"
@@ -768,7 +775,7 @@ const Index = () => {
 
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium mb-2">
-                        Your message
+                        {t("home.contact.message_label")}
                       </label>
                       <Textarea
                         id="message"
@@ -797,7 +804,7 @@ const Index = () => {
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <Mail className="w-4 h-4" aria-hidden="true" />
-                        Send message
+                        {t("home.contact.send_button")}
                       </span>
                       <div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
@@ -808,7 +815,7 @@ const Index = () => {
                 </div>
               </Card>
 
-              <aside aria-label="Reward panel" className="md:sticky md:top-24">
+              <aside aria-label={t("home.quest.title")} className="md:sticky md:top-24">
                 <Card className="relative overflow-hidden bg-card border-border">
                   <div className="h-2 bg-gradient-to-r from-transparent via-accent to-transparent" aria-hidden="true" />
                   <div className="p-6">
@@ -817,8 +824,8 @@ const Index = () => {
                         <PartyPopper className="w-5 h-5 text-accent" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-lg font-semibold">Secret Quest</h3>
-                        <p className="text-sm text-muted-foreground">Open DevTools and read the riddle in the Console.</p>
+                        <h3 className="text-lg font-semibold">{t("home.quest.title")}</h3>
+                        <p className="text-sm text-muted-foreground">{t("home.quest.hint")}</p>
                       </div>
                     </div>
 
@@ -836,8 +843,8 @@ const Index = () => {
                               <Database className="w-4 h-4 text-accent" aria-hidden="true" />
                             </div>
                             <div className="min-w-0">
-                              <p className="font-semibold">Well done.</p>
-                              <p className="text-sm text-muted-foreground">You found the answer.</p>
+                              <p className="font-semibold">{t("home.quest.well_done")}</p>
+                              <p className="text-sm text-muted-foreground">{t("home.quest.found_answer")}</p>
                             </div>
                           </div>
 
@@ -867,11 +874,10 @@ const Index = () => {
                         </div>
                       ) : (
                         <div className="rounded-lg border border-border bg-muted/30 p-4">
-                          <p className="text-sm text-muted-foreground">Not unlocked yet.</p>
+                          <p className="text-sm text-muted-foreground">{t("home.quest.not_unlocked")}</p>
                         </div>
                       )}
                     </div>
-
                   </div>
                 </Card>
               </aside>

@@ -1,8 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const NotFound = () => {
   const location = useLocation();
+  const { lang = "fr" } = useParams<{ lang?: string }>();
+  const { t } = useTranslation();
 
   useEffect(() => {
     console.error(
@@ -25,15 +28,14 @@ const NotFound = () => {
         />
 
         <p className="text-lg text-gray-200 mb-8 leading-relaxed">
-          The page you are looking for does not exist.
-          It might have been moved or removed.
+          {t("not_found.message")}
         </p>
 
         <Link
-          to="/"
+          to={`/${lang}`}
           className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
         >
-          Back to Home
+          {t("not_found.back_to_home")}
         </Link>
       </div>
     </div>

@@ -1,33 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/"/>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/projects/alize</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/"/>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/projects/alize</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/alize"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/alize"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/alize"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/projects/climatserv17</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/projects/alize</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/alize"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/alize"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/alize"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/projects/climatserv17</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/climatserv17"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/climatserv17"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/climatserv17"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/projects/bandai-namco</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/projects/climatserv17</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/climatserv17"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/climatserv17"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/climatserv17"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/projects/bandai-namco</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/bandai-namco"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/bandai-namco"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/bandai-namco"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/projects/sigilai</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/projects/bandai-namco</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/bandai-namco"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/bandai-namco"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/bandai-namco"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/projects/sigilai</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/sigilai"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/sigilai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/sigilai"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://portfolio-tanguy-osvald.netlify.app/projects/portfolio</loc>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/projects/sigilai</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/sigilai"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/sigilai"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/sigilai"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/projects/portfolio</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/portfolio"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/projects/portfolio</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/projects/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/projects/portfolio"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/legal-notice</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/legal-notice"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/legal-notice</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/legal-notice"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/legal-notice"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/fr/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/privacy-policy"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://portfolio-tanguy-osvald.netlify.app/en/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://portfolio-tanguy-osvald.netlify.app/fr/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://portfolio-tanguy-osvald.netlify.app/en/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://portfolio-tanguy-osvald.netlify.app/fr/privacy-policy"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>
