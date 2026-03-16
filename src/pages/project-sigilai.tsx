@@ -1,9 +1,7 @@
 import { Helmet } from "react-helmet-async";
-import { Github } from "lucide-react";
 import { useTranslation, Trans } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -162,19 +160,6 @@ export default function ProjectSigilAI() {
             <aside className="space-y-6 lg:sticky lg:top-24" aria-label={t("common.project_links_aria")}>
               <Card className="p-6 bg-card border-border">
                 <h2 className="text-xl font-semibold">{t("common.links")}</h2>
-                <div className="mt-4 space-y-3">
-                  <Button asChild variant="outline" className="w-full border-accent text-accent hover:bg-accent/10">
-                    <a
-                      href="https://github.com/Tanosv"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={t("project_sigilai.open_github_aria")}
-                    >
-                      <Github className="w-4 h-4 mr-2" aria-hidden="true" />
-                      {t("common.github")}
-                    </a>
-                  </Button>
-                </div>
                 <p className="mt-4 text-xs text-muted-foreground">
                   {t("project_sigilai.no_demo")}
                 </p>
