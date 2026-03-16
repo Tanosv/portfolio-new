@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
 
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/images/projects/Screen_Climatserv17_Banner.webp";
+import { SITE_URL } from "@/lib/site";
+const OG_IMAGE_URL = `${SITE_URL}/images/projects/Screen_Climatserv17_Banner.webp`;
 
 export default function ProjectClimatserv17() {
   const title = "Project ClimatServ 17";
@@ -152,7 +152,7 @@ export default function ProjectClimatserv17() {
                 <div className="mt-4 space-y-3">
                   <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                     <a
-                      href="https://climatserv17.netlify.app"
+                      href="https://climatserv17.fr"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Open ClimatServ 17 live site in a new tab"
@@ -162,17 +162,7 @@ export default function ProjectClimatserv17() {
                     </a>
                   </Button>
 
-                  <Button asChild variant="outline" className="w-full border-accent text-accent hover:bg-accent/10">
-                    <a
-                      href="https://github.com/Aurel1407/ClimatServ17"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Open ClimatServ 17 source code on GitHub in a new tab"
-                    >
-                      <Github className="w-4 h-4 mr-2" aria-hidden="true" />
-                      GitHub
-                    </a>
-                  </Button>
+                  
                 </div>
               </Card>
             </aside>
@@ -181,7 +171,7 @@ export default function ProjectClimatserv17() {
 
         <footer className="py-10 border-t border-border">
           <div className="container mx-auto px-4 text-center text-muted-foreground">
-            <p>© 2026 Tanguy Osvald. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
           </div>
         </footer>
       </main>

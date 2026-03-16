@@ -4,8 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
 
-const SITE_URL = "https://yourdomain.com";
-const OG_IMAGE_URL = "https://yourdomain.com/og.png";
+import { SITE_URL, OG_IMAGE_URL } from "@/lib/site";
 
 export default function ProjectAlize() {
   const title = "Alizé Project";
@@ -170,7 +169,7 @@ export default function ProjectAlize() {
 
         <footer className="py-10 border-t border-border">
           <div className="container mx-auto px-4 text-center text-muted-foreground">
-            <p>© 2026 Tanguy Osvald. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
           </div>
         </footer>
       </main>

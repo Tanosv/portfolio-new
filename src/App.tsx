@@ -1,32 +1,34 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProjectAlize from "./pages/project-alize";
 import ProjectBandaiNamco from "./pages/project-bandai-namco";
 import ProjectClimatserv17 from "./pages/project-climatserv17";
-
-const queryClient = new QueryClient();
+import ProjectPortfolio from "./pages/project-portfolio";
+import ProjectSigilAI from "./pages/project-sigilai";
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <ErrorBoundary>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
         <Routes>
-    <Route path="/" element={<Index />} />
-    <Route path="/projects/alize" element={<ProjectAlize />} />
-    <Route path="/projects/climatserv17" element={<ProjectClimatserv17 />} />
-    <Route path="/projects/bandai-namco" element={<ProjectBandaiNamco />} />
-    <Route path="*" element={<NotFound />} />
-  </Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/projects/alize" element={<ProjectAlize />} />
+          <Route path="/projects/climatserv17" element={<ProjectClimatserv17 />} />
+          <Route path="/projects/bandai-namco" element={<ProjectBandaiNamco />} />
+          <Route path="/projects/portfolio" element={<ProjectPortfolio />} />
+          <Route path="/projects/sigilai" element={<ProjectSigilAI />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
-  </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
