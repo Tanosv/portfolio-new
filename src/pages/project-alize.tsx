@@ -3,6 +3,7 @@ import { ExternalLink, Github } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 import { SITE_URL, OG_IMAGE_URL } from "@/lib/site";
 
@@ -165,11 +166,7 @@ export default function ProjectAlize() {
           </div>
         </section>
 
-        <footer className="py-10 border-t border-border">
-          <div className="container mx-auto px-4 text-center text-muted-foreground">
-            <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
-          </div>
-        </footer>
+        <SiteFooter />
       </main>
     </div>
   );

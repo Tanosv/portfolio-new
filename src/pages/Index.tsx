@@ -880,12 +880,7 @@ const Index = () => {
         </section>
       </main>
 
-      <footer className="py-8 border-t border-border relative">
-        <div className="ornate-divider max-w-md mx-auto mb-6" aria-hidden="true" />
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} Tanguy Osvald. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };

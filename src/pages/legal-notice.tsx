@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Scale, Globe, ShieldCheck } from "lucide-react";
 
 import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SITE_URL } from "@/lib/config";
@@ -137,11 +138,7 @@ export default function LegalNotice() {
           </div>
         </section>
 
-        <footer className="py-10 border-t border-border">
-          <div className="container mx-auto px-4 text-center text-muted-foreground">
-            <p>© 2026 Tanguy Osvald. All rights reserved.</p>
-          </div>
-        </footer>
+        <SiteFooter />
       </main>
     </div>
   );
